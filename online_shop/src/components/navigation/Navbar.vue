@@ -1,8 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, defineProps} from 'vue';
 import { useRoute } from 'vue-router';
+import Login from '../userAccount/login.vue';
 
 const route = useRoute();
+
+defineProps({ propNavbarContainer: String });
 
 const items = ref([
   {
@@ -15,13 +18,18 @@ const items = ref([
     disabled: false,
     to: '/Store',
   },
+  {
+    title: 'Cart',
+    disabled: false,
+    to: '/',
+  },
 ]);
 
 const isActive = (to) => route.path === to;
 </script>
 
 <template>
-  <v-app class="navbarContainer">
+  <v-app :class="['navbarContainer', propNavbarContainer]">
     <v-container class="navBarSub">
       <v-breadcrumbs :items="items">
         <template v-slot:item="{ item }">
@@ -34,10 +42,10 @@ const isActive = (to) => route.path === to;
           </v-breadcrumbs-item>
         </template>
         <template v-slot:divider>
-          <v-icon icon="mdi-chevron-right"></v-icon>
+          <v-icon icon="mdi-circle-small"></v-icon>
         </template>
       </v-breadcrumbs>
-        <v-btn variant="text" class="bg-black text-white btn">LOGIN</v-btn>
+      <Login/>
     </v-container>
   </v-app>
 </template>

@@ -88,7 +88,7 @@ h1 {
         position: absolute;
         bottom: 80px;
         left: -50px;
-        transform: rotate(90deg);
+        transform: rotate(270deg);
       }
     }
   }

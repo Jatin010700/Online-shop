@@ -1,3 +1,9 @@
+<script setup>
+import { defineProps } from 'vue';
+
+defineProps({ propFooterSub: String });
+</script>
+
 <script>
   export default {
     data: () => ({
@@ -18,7 +24,7 @@
   }
 </script>
 <template>
-    <v-app class="footerSub">
+    <v-app :class="['footerSub', propFooterSub]">
         <v-footer class="bg-black text-white">
           <v-row justify="center" no-gutters>
             <v-btn
@@ -54,7 +60,7 @@
 <style lang="scss" scoped>
 .footerSub {
     position: relative;
-    bottom: -350px;
+    bottom: 0;
     height: 100px;
     font-size: 18px;
 

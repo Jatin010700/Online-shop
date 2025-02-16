@@ -7,6 +7,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
+import MasonryWall from '@yeger/vue-masonry-wall'
 
 import router from './components/router'
 
@@ -28,4 +29,4 @@ const vuetify = createVuetify({
     },
   })
 
-createApp(App).use(router).use(vuetify).mount('#app')
+createApp(App).use(router).use(vuetify).use(MasonryWall).mount('#app')

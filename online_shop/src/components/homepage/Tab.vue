@@ -1,45 +1,24 @@
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import axios from "axios";
     import TabSpeedDial from './TabSpeedDial.vue';
 
-    
+    const products =ref([]);
+    const tab = ref(null);
+    const loading = ref(true);
 
-    const cards = ref([
-        {
-            image: new URL('../../assets/mouse.jpg', import.meta.url).href,
-            discount: '-50%',
-            title: 'Hover and click me',
-            subtitle: 'Same looks, no anchor',
-        },
-        {
-            image: new URL('../../assets/game1.jpg', import.meta.url).href,
-            discount: '-50%',
-            title: 'Hover and click me',
-            subtitle: 'Same looks, no anchor',
-        },
-        {
-            image: new URL('../../assets/keyboard.jpg', import.meta.url).href,
-            discount: '-50%',
-            title: 'Hover and click me',
-            subtitle: 'Same looks, no anchor',
-            cardProps: { subtitle: 'Same looks, no anchor', title: 'Hover and click me' },
-        },
-        {
-            image: new URL('../../assets/mouse.jpg', import.meta.url).href,
-            discount: '-50%',
-            title: 'Hover and click me',
-            subtitle: 'Same looks, no anchor',
-            cardProps: { subtitle: 'Same looks, no anchor', title: 'Hover and click me' },
-        },
-    ]);
-</script>
-
-<script>
-  export default {
-    data: () => ({
-      tab: null,
-    }),
-  }
+    onMounted(async () => {
+        try {
+            const res = await axios.get("http://localhost:3000/products");
+            products.value = res.data.products;
+            setTimeout(() => {
+                loading.value = false;
+            }, 3000);
+            console.log(res.data)
+        } catch (err) {
+            console.error(err);
+        }
+    });
 </script>
 
 <template>
@@ -56,51 +35,64 @@
                     bg-color="primary">
                     <v-tab value="one" class="tabHeader">New Items</v-tab>
                     <v-tab value="two" class="tabHeader">Discount</v-tab>
-                    <v-tab value="three" class="tabHeader">Limited</v-tab>
+                    <v-tab value="three" class="tabHeader">Seasonal</v-tab>
                 </v-tabs>
 
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                     <v-tabs-window-item value="one" class="wrapContent">
                     <v-card
-                        v-for="(item, index) in cards.slice(0, 4)" :key="index"
+                        v-for="(product, i) in products.slice(0, 4)" :key="i"
                         class="tabCard"
                         max-width="344"
                         link>
-                        <v-img :src="item.image" height="75%" cover></v-img>
-                        <p class="discount">{{ item.discount }}</p>
-                        <v-card-title>{{ item.title }}</v-card-title>
-                        <v-card-subtitle>{{ item.subtitle }}</v-card-subtitle>
+                        <v-skeleton-loader v-if="loading" :loading="loading" type="image, article">
+                            <v-img :src="product.image" height="75%" cover></v-img>
+                            <p class="item-status">{{ product.item_status }}</p>
+                            <v-card-title class="title">{{ product.title }}</v-card-title>
+                            <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
+                        </v-skeleton-loader>
+                        
+                        <v-img v-if="!loading" :src="product.image" height="75%" cover></v-img>
+                        <p v-if="!loading" class="item-status">{{ product.item_status }}</p>
+                        <v-card-title v-if="!loading" class="title">{{ product.title }}</v-card-title>
+                        <v-card-subtitle v-if="!loading" class="price">${{ product.price || "No Price" }}</v-card-subtitle>
                         <TabSpeedDial/>
                     </v-card>
                     </v-tabs-window-item>
             
                     <v-tabs-window-item value="two"  class="wrapContent">
                         <v-card
-                        v-for="(item, index) in cards.slice(0, 4)" :key="index"
-                        class="tabCard"
-                        max-width="344"
-                        link>
-                        <v-img :src="item.image" height="75%" cover></v-img>
-                        <p class="discount">{{ item.discount }}</p>
-                        <v-card-title>{{ item.title }}</v-card-title>
-                        <v-card-subtitle>{{ item.subtitle }}</v-card-subtitle>
+                            v-for="(product, i) in products.slice(4, 8)" :key="i"
+                            class="tabCard"
+                            max-width="344"
+                            link>
+                        <v-img :src="product.image" height="75%" cover></v-img>
+                        <p class="item-status">-{{ product.discount }}%</p>
+                        <v-card-title class="title">{{ product.title }}</v-card-title>
+                        <div class="wrapDiscount">
+                            <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
+                            <v-card-subtitle class="priceDiscount">
+                                ${{ product.discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price || "No Discount" }}
+                            </v-card-subtitle>
+                        </div>
                         <TabSpeedDial/>
                     </v-card>
                     </v-tabs-window-item>
             
                     <v-tabs-window-item value="three"  class="wrapContent">
-                            <v-card
-                            v-for="(item, index) in cards.slice(0, 4)" :key="index"
+                        <v-card
+                            v-for="(product, i) in products.slice(8, 12)" :key="i"
                             class="tabCard"
                             max-width="344"
                             link>
-                            <v-img :src="item.image" height="75%" cover></v-img>
-                            <p class="discount">{{ item.discount }}</p>
-                            <v-card-title>{{ item.title }}</v-card-title>
-                            <v-card-subtitle>{{ item.subtitle }}</v-card-subtitle>
-                            <TabSpeedDial/>
-                        </v-card>
+                        <v-img :src="product.image" height="75%" cover></v-img>
+                        <p class="item-status">{{ product.item_status }}</p>
+                        <p class="item-stock">IN STOCK: {{ product.remaining_in_stock }}</p>
+                        <v-card-title class="title">{{ product.title }}</v-card-title>
+                        <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
+                        <TabSpeedDial/>
+                    </v-card>
                     </v-tabs-window-item>
                     </v-tabs-window>
                 </v-card-text>
@@ -150,17 +142,55 @@
                 width: 25%;
                 position: relative;
 
-                .discount {
+                .title {
+                    font-size: 24px;
+                    text-transform: uppercase;
+                    padding: 0.2rem 1rem;
+                }
+
+                .price, .priceDiscount {
+                    font-size: 24px;
+                    opacity: 1;
+                    color: #191919;
+                }
+
+                .wrapDiscount {
+                    display: flex;
+                    align-items: center;
+
+                    .price {
+                        padding: 0 0 0 1rem;
+                    }
+                    
+                    .priceDiscount {
+                        text-decoration: line-through;
+                        opacity: 0.5;
+                        font-size: 20px;
+                    }
+                }
+
+                .item-status,
+                .item-stock {
                     position: absolute;
                     top: 10px;
                     right: 0;
                     background-color: white;
                     color: #191919;
                     padding: 5px 10px;
-                    z-index: 10;
+                    z-index: 1;
                 }
+                
+                .item-stock {
+                    top: 38px;
+                }
+
             }
         }
+    }
+    :deep(.v-skeleton-loader),
+    :deep(.v-skeleton-loader__heading),
+    :deep(.v-skeleton-loader__text) {
+        border-radius: 0!important;
     }
 
     :deep(.bg-primary),
@@ -187,6 +217,10 @@
 
     :deep(.v-slide-group__content) {
         margin-left: 65px;
+    }
+
+    :deep(.v-skeleton-loader__image) {
+        height: 167px;
     }
 }
 </style>

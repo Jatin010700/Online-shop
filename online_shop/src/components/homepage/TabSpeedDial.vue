@@ -30,6 +30,7 @@
             :deep(button) {
                 background-color: #191919;
                 color: white;
+                z-index: 1;
             }
         }
 </style>

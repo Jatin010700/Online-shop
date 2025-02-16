@@ -4,8 +4,8 @@ import HomePage from '../homepage/HomePage.vue';
 import Store from '../store/Store.vue';
 
 const routes = [
-  { path: '/', 
-    name: 'Home', 
+  { path: '/',
+    name: 'Home',
     component: HomePage,
    },
   { path: '/Store',

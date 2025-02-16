@@ -1,0 +1,202 @@
+[
+  {
+    "title": "God Of War Ragnarok",
+    "item_status": null,
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos sunt ratione dolor exercitationem minima quas itaque saepe quasi architecto vel! Accusantium, vero sint recusandae cum tempora nemo commodi soluta deleniti.",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 57,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653426/shopProjectV2.0/tas6r85o06aqprb7vlog.webp"
+  },
+  {
+    "title": "Spider Man",
+    "item_status": null,
+    "description": "No game description",
+    "discount": 50,
+    "price": 59.99,
+    "remaining_in_stock": 45,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653441/shopProjectV2.0/tjuusorxpf9pbsgemc1z.webp"
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "item_status": null,
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 15,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rzwwtxydfc6ex5c7vr1m.webp"
+  },
+  {
+    "title": "God Of War Ragnarok",
+    "item_status": "LIMITED",
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 30,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653426/shopProjectV2.0/tas6r85o06aqprb7vlog.webp"
+  },
+  {
+    "title": "Gran Turismo",
+    "item_status": null,
+    "description": "No game description",
+    "discount": 25,
+    "price": 59.99,
+    "remaining_in_stock": 1,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rxmyaknofq599tov32kf.webp"
+  },
+  {
+    "title": "God Of War Ragnarok",
+    "item_status": null,
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 2,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653426/shopProjectV2.0/tas6r85o06aqprb7vlog.webp"
+  },
+  {
+    "title": "Gran Turismo",
+    "item_status": "NEW",
+    "description": "No game description",
+    "discount": 10,
+    "price": 59.99,
+    "remaining_in_stock": 48,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rxmyaknofq599tov32kf.webp"
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "item_status": "",
+    "description": "No game description",
+    "discount": 90,
+    "price": 59.99,
+    "remaining_in_stock": 8,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rzwwtxydfc6ex5c7vr1m.webp"
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "item_status": "LIMITED",
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 36,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rzwwtxydfc6ex5c7vr1m.webp"
+  },
+  {
+    "title": "God Of War Ragnarok",
+    "item_status": null,
+    "description": "No game description",
+    "discount": 75,
+    "price": 59.99,
+    "remaining_in_stock": 36,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653426/shopProjectV2.0/tas6r85o06aqprb7vlog.webp"
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "item_status": "NEW",
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 6,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rzwwtxydfc6ex5c7vr1m.webp"
+  },
+  {
+    "title": "Gran Turismo",
+    "item_status": null,
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 69,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rxmyaknofq599tov32kf.webp"
+  },
+  {
+    "title": "God Of War Ragnarok",
+    "item_status": null,
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos sunt ratione dolor exercitationem minima quas itaque saepe quasi architecto vel! Accusantium, vero sint recusandae cum tempora nemo commodi soluta deleniti.",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 57,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653426/shopProjectV2.0/tas6r85o06aqprb7vlog.webp"
+  },
+  {
+    "title": "Spider Man",
+    "item_status": null,
+    "description": "No game description",
+    "discount": 50,
+    "price": 59.99,
+    "remaining_in_stock": 45,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653441/shopProjectV2.0/tjuusorxpf9pbsgemc1z.webp"
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "item_status": null,
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 15,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rzwwtxydfc6ex5c7vr1m.webp"
+  },
+  {
+    "title": "God Of War Ragnarok",
+    "item_status": "LIMITED",
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 30,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653426/shopProjectV2.0/tas6r85o06aqprb7vlog.webp"
+  },
+  {
+    "title": "Gran Turismo",
+    "item_status": null,
+    "description": "No game description",
+    "discount": 25,
+    "price": 59.99,
+    "remaining_in_stock": 1,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rxmyaknofq599tov32kf.webp"
+  },
+  {
+    "title": "God Of War Ragnarok",
+    "item_status": null,
+    "description": "No game description",
+    "discount": null,
+    "price": 59.99,
+    "remaining_in_stock": 2,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653426/shopProjectV2.0/tas6r85o06aqprb7vlog.webp"
+  },
+  {
+    "title": "Gran Turismo",
+    "item_status": "NEW",
+    "description": "No game description",
+    "discount": 10,
+    "price": 59.99,
+    "remaining_in_stock": 48,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rxmyaknofq599tov32kf.webp"
+  },
+  {
+    "title": "Ghost of Tsushima",
+    "item_status": "",
+    "description": "No game description",
+    "discount": 90,
+    "price": 59.99,
+    "remaining_in_stock": 8,
+    "quantity": 1,
+    "image": "https://res.cloudinary.com/dttarxcrw/image/upload/v1707653425/shopProjectV2.0/rzwwtxydfc6ex5c7vr1m.webp"
+  }
+]
