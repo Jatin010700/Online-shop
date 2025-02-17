@@ -22,15 +22,22 @@
 
 <style lang="scss" scoped>
 .tabSpeedDial {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            height: auto !important;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    height: auto !important;
 
-            :deep(button) {
-                background-color: #191919;
-                color: white;
-                z-index: 1;
-            }
-        }
+    :deep(button) {
+        background-color: #191919;
+        color: white;
+        z-index: 1;
+    }
+}
+:deep(.v-btn--icon) {
+    border-radius: 0!important;
+}
+
+.v-btn--icon{
+    border-radius: 0!important;
+}
 </style>

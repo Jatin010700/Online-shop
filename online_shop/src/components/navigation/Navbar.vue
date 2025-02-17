@@ -42,7 +42,7 @@ const isActive = (to) => route.path === to;
           </v-breadcrumbs-item>
         </template>
         <template v-slot:divider>
-          <v-icon icon="mdi-circle-small"></v-icon>
+          <v-icon icon="mdi-square-medium" style="transform: rotate(45deg); font-size: 18px;"></v-icon>
         </template>
       </v-breadcrumbs>
       <Login/>

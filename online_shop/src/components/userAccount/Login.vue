@@ -132,6 +132,10 @@
     font-family: "Teko", serif;
 }
 
+.v-card-text {
+  text-align: center;
+}
+
 .formLogin {
     padding: 20px;
 

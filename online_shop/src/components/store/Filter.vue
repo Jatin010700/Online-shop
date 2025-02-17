@@ -1,13 +1,13 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from "axios";
 
 const dialog = ref(false);
-
 const slider = ref(0);
 const slider2 = ref(0);
 const max2 = ref(1000);
-
 const amenities = ref([]);
+const products = ref([]);
 
 const sliderPriceDecimal = (sliderRef) => computed({
   get: () => Number(sliderRef.value).toFixed(2),
@@ -18,6 +18,20 @@ const sliderPriceDecimal = (sliderRef) => computed({
 
 const sliderPrice1 = sliderPriceDecimal(slider);
 const sliderPrice2 = sliderPriceDecimal(slider2)
+
+onMounted(async () => {
+  try {
+      const res = await axios.get("http://localhost:3000/products");
+      products.value = res.data.products;
+  } catch (err) {
+      console.error(err);
+  }
+});
+
+// const filterProducts = ref([
+//   {title: products.title, value: products.discount.value}
+// ]);
+
 
 const items = ref([
   { title: 'NEW ITEMS', value: false },
@@ -51,6 +65,23 @@ const lists = ref([
   { text: 'ITEM 17' },
   { text: 'ITEM 18' },
 ]);
+
+defineProps(["filterUpdated"]);
+const emit = defineEmits(['filterUpdated']);
+
+const handleSave = () => {
+  const isAnyChecked = items.value.some(item => item.value); // Check if at least one item is selected
+
+  if (isAnyChecked) {
+    // Save logic (you can modify this to send data to backend, store in Vuex, etc.)
+    console.log("Saved successfully!", items.value.filter(item => item.value));
+    dialog.value = false;
+    
+  } else {
+    console.error("Error: Please select at least one option before saving.");
+    
+  }
+};
 </script>
 
 <template>
@@ -79,13 +110,12 @@ const lists = ref([
                     text="Save"
                     variant="text"
                     class="bg-black"
-                    @click="dialog = false">
+                    @click="handleSave">
                 </v-btn>
             </v-toolbar-items>
           </v-toolbar>
 
           <div class="wrapCheckbox-Slider">
-
             <v-list lines="two">
               <div class="checkboxGrid">
                 <v-list-item
@@ -104,26 +134,19 @@ const lists = ref([
             </v-list>
 
             <div class="wrapSlider">
-
               <v-slider
-              v-model="slider"
+                v-model="slider"
                 class="align-center"
                 hide-details
                 thumb-color="#191919"
                 color="#191919"
-                thumb-label>
+                thumb-label
+              >
                 <template v-slot:append>
-                    <v-text-field
-                    v-model="sliderPrice1"
-                    density="compact"
-                    style="width: 70px"
-                    hide-details
-                    single-line
-                    variant="outlined"
-                    ></v-text-field>
+                  <span style="width: 70px; text-align: center;">{{ sliderPrice1 }}</span>
                 </template>
-                </v-slider>
-  
+              </v-slider>
+                
               <v-slider
                   v-model="slider2"
                   :max="max2"
@@ -132,16 +155,9 @@ const lists = ref([
                   thumb-color="#191919"
                   color="#191919"
                   thumb-label>
-              <template v-slot:append>
-                  <v-text-field
-                      v-model="sliderPrice2"
-                      density="compact"
-                      style="width: 70px"
-                      hide-details
-                      single-line
-                      variant="outlined">
-                  </v-text-field>
-              </template>
+                  <template v-slot:append>
+                    <span style="width: 70px; text-align: center;">{{ sliderPrice2 }}</span>
+                </template>
               </v-slider>
             </div>
           </div>
@@ -216,6 +232,10 @@ const lists = ref([
     margin-inline: 0;
 }
 
+:deep(.v-slide-group__content) {
+  max-width: none;
+}
+
 .v-text-field {
     width: 81px!important;
 }
@@ -224,6 +244,10 @@ const lists = ref([
   opacity: 1;
 }
 
+:deep(.v-slider-thumb__surface) {
+  border-radius: 0;
+  transform: rotate(45deg);
+}
 .wrapCheckbox-Slider {
   display: flex;
   align-items: center;

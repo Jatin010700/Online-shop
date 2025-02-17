@@ -20,7 +20,7 @@ const emit = defineEmits(["update:modelValue"]);
           hide-details
           prepend-inner-icon="mdi-magnify"
         />
-      <Filter/>
+      <Filterz/>
       <Navbar propNavbarContainer="propNavContainer"/>
       </div>
     </v-container>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import axios from "axios";
 
 import Search from './Search.vue';
@@ -16,7 +16,7 @@ onMounted(async () => {
   try {
       const res = await axios.get("http://localhost:3000/products");
       allProducts.value = res.data.store;
-      store.value = res.data.store.slice(0, itemsToShow.value);;
+      store.value = res.data.store.slice(0, itemsToShow.value);
       setTimeout(() => {
           loading.value = false;
       }, 3000);
@@ -33,17 +33,19 @@ const showMore = () => {
 
 //SEARCH INPUT
 const filteredProducts = computed(() => {
-  loading.value = true;
-
-  setTimeout(() => {
-    loading.value = false;
-  }, 3000);
   if (!searchQuery.value) {
     return allProducts.value.slice(0, itemsToShow.value);
   }
     return allProducts.value.filter(item => 
       item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
+});
+
+watch(searchQuery, () => {
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+  }, 3000);
 });
 </script>
 <template>
