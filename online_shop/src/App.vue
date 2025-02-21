@@ -4,5 +4,5 @@
 
 <template>
     <Drawer/>
-      <router-view></router-view>
+    <router-view></router-view>
 </template>

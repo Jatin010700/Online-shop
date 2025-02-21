@@ -31,3 +31,11 @@ app.get("/products", async (req, res) => {
     res.status(500).json({err: "SERVER/DB ERROR"});
   }
 })
+
+app.get("/users", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany();
+  } catch {
+    res.status(500).json({err: "SERVER/DB ERROR"});
+  }
+})

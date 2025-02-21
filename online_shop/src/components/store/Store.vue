@@ -1,17 +1,19 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, provide, ref, watch } from 'vue';
 import axios from "axios";
-
-import Search from './Search.vue';
+import Search_Filter from './Search_Filter.vue';
 import TabSpeedDial from '../homepage/TabSpeedDial.vue';
 import Footer from '../homepage/Footer.vue'
 
 const store = ref([]);
 const allProducts = ref([]);
+provide('products', allProducts);
 const loading = ref(true);
 const itemsToShow = ref(8);
 const searchQuery = ref("");
+const selectedFilters = ref([]);
 
+// PRODUCT API
 onMounted(async () => {
   try {
       const res = await axios.get("http://localhost:3000/products");
@@ -31,14 +33,31 @@ const showMore = () => {
   store.value = allProducts.value.slice(0, itemsToShow.value);
 };
 
-//SEARCH INPUT
+// ALL PRODUCT CODE BLOCK
 const filteredProducts = computed(() => {
-  if (!searchQuery.value) {
-    return allProducts.value.slice(0, itemsToShow.value);
+  let filtered = allProducts.value;
+
+  // CHECK IF SelectedFilters have DISCOUNT, LIMITED, NEW ITEMS
+  const hasDiscountFilter = selectedFilters.value.includes("DISCOUNT");
+  const hasLimitedFilter = selectedFilters.value.includes("LIMITED");
+  const hasNewItemFilter = selectedFilters.value.includes("NEW ITEMS");
+
+  if (hasDiscountFilter || hasLimitedFilter || hasNewItemFilter) {
+    filtered = filtered.filter(item => 
+      (hasDiscountFilter && item.discount !== null) ||
+      (hasLimitedFilter && item.item_status === "LIMITED") ||
+      (hasNewItemFilter && item.item_status === "NEW")
+    );
   }
-    return allProducts.value.filter(item => 
+
+  // SEARCH INPUT FILTER
+  if (searchQuery.value) {
+    filtered = filtered.filter(item =>
       item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
+  }
+  
+  return filtered.slice(0, itemsToShow.value);
 });
 
 watch(searchQuery, () => {
@@ -47,15 +66,26 @@ watch(searchQuery, () => {
     loading.value = false;
   }, 3000);
 });
+
+// WHEN NO PRODUCT EXIST
+const noResults = computed(() => searchQuery.value && filteredProducts.value.length === 0);
+//  WHEN PRODUCT IS 0 or LESS THAN 8
+const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProducts.value.length < 8)
 </script>
+
 <template>
-  <Search v-model="searchQuery"/>
+  <Search_Filter 
+    v-model:searchQuery="searchQuery" 
+    v-model:selectedFilters="selectedFilters"/>
+  <div v-if="noResults" class="no-results">
+    NO PRODUCT FOUND
+  </div>
+
   <MasonryWall
     :items="filteredProducts"
     :ssr="false"
     :column-width="300"
-    :gap="20"
-  >
+    :gap="20">
     <template #default="{ item }">
       <v-skeleton-loader v-if="loading" :loading="loading" type="image, article">
       <v-card class="storeContainer">
@@ -67,15 +97,14 @@ watch(searchQuery, () => {
         <v-card-title>{{ item.title }}</v-card-title>
         <p class="description">{{ item.description }}</p>
         <div class="wrapPrice">
-          <p>${{ item.price }}</p>
-          <p class="priceDiscount" v-if="item.discount !== null">
+          <p :class="{'priceDiscount': item.discount !== null}">${{ item.price }}</p>
+          <p v-if="item.discount !== null">
             ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
           </p>
         </div>
         <TabSpeedDial/>
       </v-card>
     </v-skeleton-loader>
-
     <v-card class="storeContainer">
         <v-img v-if="!loading" :src="item.image" height="200"></v-img>
         <p class="item-status" v-if="item.item_status && !loading || item.discount !== null  && !loading">
@@ -85,8 +114,8 @@ watch(searchQuery, () => {
         <v-card-title v-if="!loading">{{ item.title }}</v-card-title>
         <p v-if="!loading" class="description">{{ item.description }}</p>
         <div v-if="!loading" class="wrapPrice">
-          <p>${{ item.price }}</p>
-          <p class="priceDiscount" v-if="item.discount !== null">
+          <p :class="{'priceDiscount': item.discount !== null}">${{ item.price }}</p>
+          <p v-if="item.discount !== null">
             ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
           </p>
         </div>
@@ -95,8 +124,8 @@ watch(searchQuery, () => {
     </template>
   </MasonryWall>
 
-  <div class="show-more-container" v-if="itemsToShow < allProducts.length">
-    <v-btn @click="showMore">Show More</v-btn>
+  <div class="show-more-container">
+    <v-btn @click="showMore"  v-if="!nobtn && itemsToShow < allProducts.length"> Show More</v-btn>
   </div>
 
   <Footer/>
@@ -159,11 +188,20 @@ watch(searchQuery, () => {
     }
   }
 }
+.no-results {
+  text-align: center;
+  font-size: 3.2em;
+  height: 63vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 :deep(.v-skeleton-loader),
 :deep(.v-skeleton-loader__heading),
 :deep(.v-skeleton-loader__text) {
   border-radius: 0!important;
 }
+
 .show-more-container {
   display: flex;
   align-items: center;

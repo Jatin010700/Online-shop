@@ -2,19 +2,19 @@
 import { ref } from 'vue';
 
 const drawer = ref(true);
-</script>
 
-<script>
-  export default {
-    data: () => ({
-      items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
-    }),
-  }
+const store = ref([
+    { title: 'Click Me', link: '/Store' },
+    { title: 'Click Me', link: '/Store' },
+    { title: 'Click Me', link: '/Store' },
+    { title: 'Click Me', link: '/Store' },
+])
+
+const account = ref([
+    { title: 'My wishlist', link: '/', icon: "mdi-heart" },
+    { title: 'My cart', link: '/', icon: "mdi-cart" },
+    { title: 'Settings', link: '/', icon: "mdi-cog" },
+])
 </script>
 <template>
     <v-app class="drawerApp">
@@ -31,6 +31,29 @@ const drawer = ref(true);
                 location="end">
                     <template v-slot:activator="{ props }">
                         <v-btn variant="text" v-bind="props">
+                            <router-link to="/" class="link">
+                                <v-list-item title="Account" prepend-icon="mdi-account"></v-list-item>
+                            </router-link>
+                        </v-btn>
+                    </template>
+                        <v-list class="custom-menu">
+                            <v-list-item
+                            v-for="(item, index) in account"
+                            :key="index">
+                            <v-btn variant="text" :prepend-icon="item.icon">
+                                <router-link :to="item.link" class="link" >
+                                    {{ item.title }}
+                                </router-link>
+                            </v-btn>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-menu 
+                transition="slide-x-transition"
+                open-on-hover
+                location="end">
+                    <template v-slot:activator="{ props }">
+                        <v-btn variant="text" v-bind="props">
                             <router-link to="/Store" class="link">
                                 <v-list-item title="Store" prepend-icon="mdi-store"></v-list-item>
                             </router-link>
@@ -38,14 +61,17 @@ const drawer = ref(true);
                     </template>
                         <v-list class="custom-menu">
                             <v-list-item
-                            v-for="(item, index) in items"
+                            v-for="(item, index) in store"
                             :key="index">
-                            <router-link to="/Store"  class="link">
-                                <v-list-item title="Other page" prepend-icon="mdi-circle-small"></v-list-item>
-                            </router-link>
+                            <v-btn variant="text" prepend-icon="mdi-store">
+                                <router-link :to="item.link" class="link">
+                                    {{ item.title }}
+                                </router-link>
+                            </v-btn>
                         </v-list-item>
                     </v-list>
                 </v-menu>
+                
                 <v-btn variant="text" class="link">
                     <router-link>
                         <v-list-item title="Cart" prepend-icon="mdi-cart"></v-list-item>
@@ -106,9 +132,34 @@ const drawer = ref(true);
 .custom-menu {
     border-radius: 0 !important;
     box-shadow: none !important;
+    width: 225px;
+    padding: 0;
 
+    .v-list-item  {
+        padding: 0;
+    }
+
+    .v-btn--size-default {
+        border-radius: 0;
+        width: 100%;
+        padding: 4px 20px;
+        height: auto;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .v-list-item--one-line {
+        padding-inline: 0!important;
+    }
     a {
         color: #191919!important;
+        display: inline-block;
+        width: 225px;
+        padding: 10px;
+    }
+
+    .v-list-item--density-default {
+        min-height: 0;
     }
 }
 </style>

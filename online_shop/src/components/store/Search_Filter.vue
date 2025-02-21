@@ -1,13 +1,13 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import axios from "axios";
+import { defineProps, defineEmits, ref, computed, inject } from 'vue';
+import Navbar from '../navigation/navbar.vue';
+import { useToast } from "vue-toastification";
 
 const dialog = ref(false);
 const slider = ref(0);
 const slider2 = ref(0);
 const max2 = ref(1000);
 const amenities = ref([]);
-const products = ref([]);
 
 const sliderPriceDecimal = (sliderRef) => computed({
   get: () => Number(sliderRef.value).toFixed(2),
@@ -17,26 +17,42 @@ const sliderPriceDecimal = (sliderRef) => computed({
 });
 
 const sliderPrice1 = sliderPriceDecimal(slider);
-const sliderPrice2 = sliderPriceDecimal(slider2)
+const sliderPrice2 = sliderPriceDecimal(slider2);
 
-onMounted(async () => {
-  try {
-      const res = await axios.get("http://localhost:3000/products");
-      products.value = res.data.products;
-  } catch (err) {
-      console.error(err);
-  }
-});
+// FILTER
+const props = defineProps(["searchQuery", "selectedFilters"]);
+const emit = defineEmits(["update:searchQuery", "update:selectedFilters"]);
 
-// const filterProducts = ref([
-//   {title: products.title, value: products.discount.value}
-// ]);
+// REMINDER: provide and inject to manage to state across component
+// GET all prodcut from store component
+const products = inject('products');
+
+// FILTER discount from product
+const discounts = products.value
+  .filter(product => product.discount !== null)
+  .map(product => product.discount);
+
+// FILTER item_status with LIMITED from product
+const limited = products.value
+  .filter(product => product.item_status === "LIMITED")
+  .map(product => product.item_status);
+
+// FILTER item_status with NEW ITEM from product
+const newItem = products.value
+  .filter(product => product.item_status === "NEW")
+  .map(product => product.item_status);
+
+  // SLIDER PRICE NEED TO ADD
+  const pricelessthen100 = products.value
+  .filter(product => product.price < 100)
+  .map(product => product.price);
 
 
+// FILTER CHECKBOX
 const items = ref([
-  { title: 'NEW ITEMS', value: false },
-  { title: 'DISCOUNT', value: false },
-  { title: 'LIMITED', value: false },
+  { title: 'NEW ITEMS', value: newItem.length > 0 ? newItem : false },
+  { title: 'DISCOUNT', value: discounts.length > 0 ? discounts : false },
+  { title: 'LIMITED', value: limited.length > 0 ? limited : false },
   { title: 'ITEM 4', value: false },
   { title: 'ITEM 5', value: false },
   { title: 'ITEM 6', value: false },
@@ -66,37 +82,77 @@ const lists = ref([
   { text: 'ITEM 18' },
 ]);
 
-defineProps(["filterUpdated"]);
-const emit = defineEmits(['filterUpdated']);
+// SAVE BUTTON
+const handleSave = (e) => {
+  e.preventDefault();
 
-const handleSave = () => {
-  const isAnyChecked = items.value.some(item => item.value); // Check if at least one item is selected
-
-  if (isAnyChecked) {
-    // Save logic (you can modify this to send data to backend, store in Vuex, etc.)
-    console.log("Saved successfully!", items.value.filter(item => item.value));
-    dialog.value = false;
-    
+  // Filter selected filters where value is true (checkbox is checked)
+  const selectedFilters = items.value.filter(item => item.value).map(item => item.title);
+  const toast = useToast();
+  // Check if no filters are selected
+  if (selectedFilters.length === 0) {
+      toast.error("Please select at least one option before saving.", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 3000
+      });
   } else {
-    console.error("Error: Please select at least one option before saving.");
-    
+    // Emit the selected filters if any checkbox is checked
+    emit("update:selectedFilters", selectedFilters);
+    dialog.value = false;
   }
+};
+
+// RESET CHECKBOX
+const handleReset = () => {
+  // Reset all items to false (unchecked)
+  items.value.forEach(item => {
+    item.value = false;
+  });
+
+  // Emit the reset state (empty array)
+  emit("update:selectedFilters", []);
+  dialog.value = false;
+};
+
+const clearSearch = () => {
+  emit('update:searchQuery', '');
 };
 </script>
 
 <template>
-     <div class="text-center">
-      <v-dialog
-        v-model="dialog"
-        transition="dialog-top-transition"
-        fullscreen>
-        <template v-slot:activator="{ props: activatorProps }">
-          <v-btn
-            size="small"
-            text="FILTER"
-            v-bind="activatorProps"
-          ></v-btn>
-        </template>
+    <v-container class="searchContainer">
+      <div class="wrapSearch">
+        <v-text-field
+          :modelValue="searchQuery"
+          @update:modelValue="emit('update:searchQuery', $event)"
+          label="Search..."
+          density="compact"
+          variant="outlined"
+          class="searchInput"
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          append-inner-icon="mdi-close"
+          @click:append-inner="clearSearch"
+        />
+
+        <!-- filter -->
+        <div class="text-center">
+          <v-dialog
+            v-model="dialog"
+            transition="dialog-top-transition"
+            fullscreen
+            persistent
+            no-click-animation>
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn
+              size="small"
+              text="FILTER"
+              v-bind="activatorProps"
+            ></v-btn>
+          </template>
 
         <v-card>
           <v-toolbar>
@@ -106,6 +162,12 @@ const handleSave = () => {
             <v-spacer></v-spacer>
 
             <v-toolbar-items>
+              <v-btn
+                    text="RESET"
+                    variant="text"
+                    class="bg-white text-black"
+                    @click="handleReset">
+                </v-btn>
                 <v-btn
                     text="Save"
                     variant="text"
@@ -126,7 +188,11 @@ const handleSave = () => {
                 >
                 <template v-slot:prepend>
                   <v-list-item-action start>
-                    <v-checkbox-btn v-model="item.value" color="bg-black"></v-checkbox-btn>
+                    <v-checkbox-btn 
+                      :modelValue="item.value"
+                      @update:modelValue="item.value = $event; handleSave();"
+                      color="bg-black">
+                    </v-checkbox-btn>
                   </v-list-item-action>
                 </template>
               </v-list-item>
@@ -179,10 +245,48 @@ const handleSave = () => {
       </v-card>
     </v-dialog>
   </div>
-</template>
+
+      <Navbar propNavbarContainer="propNavContainer"/>
+      </div>
+    </v-container>
+  </template>
 
 <style lang="scss" scoped>
-.v-card, .v-btn {
+.searchContainer {
+    padding: 16px 0;
+    margin-right: 0;
+    max-width: 1285px;
+
+    .wrapSearch {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        
+        :deep(.v-field) {
+            border-radius: 0!important;
+            font-size: 24px;
+        }
+    }
+
+    .v-main {
+        height: auto!important;
+        background-color: #191919;
+    }
+
+    .v-card, .v-btn {
+        border-radius: 0!important;
+        font-size: 20px;
+        color: #191919;
+        height: 52px;
+    }
+}
+
+.propNavContainer {
+    margin: 0;
+    height: 0;
+}
+
+  .v-card, .v-btn {
     border-radius: 0!important;
     font-size: 20px;
     color: #191919;

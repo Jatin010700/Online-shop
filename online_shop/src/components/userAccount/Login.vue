@@ -154,5 +154,9 @@
             color: white;
         }
     }
+
+    .v-text-field {
+      margin-top: 10px;
+    }
 }
 </style>

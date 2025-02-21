@@ -51,13 +51,14 @@
                             <p class="item-status">{{ product.item_status }}</p>
                             <v-card-title class="title">{{ product.title }}</v-card-title>
                             <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
+                            <TabSpeedDial/>
                         </v-skeleton-loader>
                         
                         <v-img v-if="!loading" :src="product.image" height="75%" cover></v-img>
                         <p v-if="!loading" class="item-status">{{ product.item_status }}</p>
                         <v-card-title v-if="!loading" class="title">{{ product.title }}</v-card-title>
                         <v-card-subtitle v-if="!loading" class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                        <TabSpeedDial/>
+                        <TabSpeedDial v-if="!loading"/>
                     </v-card>
                     </v-tabs-window-item>
             
@@ -71,8 +72,8 @@
                         <p class="item-status">-{{ product.discount }}%</p>
                         <v-card-title class="title">{{ product.title }}</v-card-title>
                         <div class="wrapDiscount">
-                            <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                            <v-card-subtitle class="priceDiscount">
+                            <v-card-subtitle :class="{'priceDiscount': product.discount !== null}">${{ product.price || "No Price" }}</v-card-subtitle>
+                            <v-card-subtitle class="price">
                                 ${{ product.discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price || "No Discount" }}
                             </v-card-subtitle>
                         </div>
@@ -154,18 +155,25 @@
                     color: #191919;
                 }
 
+                .price {
+                    padding-left: 1rem!important;
+                }
+
                 .wrapDiscount {
                     display: flex;
                     align-items: center;
+                    gap: 10px;
 
                     .price {
-                        padding: 0 0 0 1rem;
+                        padding-left: 0!important;
                     }
-                    
+
+
                     .priceDiscount {
                         text-decoration: line-through;
                         opacity: 0.5;
                         font-size: 20px;
+                        padding-left: 1rem!important;
                     }
                 }
 
@@ -221,6 +229,10 @@
 
     :deep(.v-skeleton-loader__image) {
         height: 167px;
+    }
+    
+    .v-card-subtitle {
+        padding: 0!important;
     }
 }
 </style>

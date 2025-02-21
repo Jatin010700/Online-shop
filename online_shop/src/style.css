@@ -27,3 +27,7 @@ p {
 body {
   margin: 0;
 }
+
+.Vue-Toastification__toast.customToast {
+  border-radius: 0!important;
+}

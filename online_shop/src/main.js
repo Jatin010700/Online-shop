@@ -11,6 +11,9 @@ import MasonryWall from '@yeger/vue-masonry-wall'
 
 import router from './components/router'
 
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
 const vuetify = createVuetify({
     components,
     directives,
@@ -29,4 +32,21 @@ const vuetify = createVuetify({
     },
   })
 
-createApp(App).use(router).use(vuetify).use(MasonryWall).mount('#app')
+createApp(App)
+.use(router)
+.use(vuetify)
+.use(MasonryWall)
+.use(Toast, {
+  toastClassName: "customToast",
+  filterBeforeCreate: (toast, toasts) => {
+    if (toasts.filter(
+      t => t.type === toast.type
+    ).length !== 0) {
+      // Returning false discards the toast
+      return false;
+    }
+    // You can modify the toast if you want
+    return toast;
+  }
+})
+.mount('#app')
