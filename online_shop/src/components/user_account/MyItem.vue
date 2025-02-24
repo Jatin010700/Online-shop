@@ -3,25 +3,35 @@ import { ref, computed, watch } from 'vue';
 import { useWishListStore } from '../../store_state/wishListState';
 import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
+import { useCartStore } from '../../store_state/cartState';
 
 const tab = ref("WISHLIST");
 
 const storeWishlist = useWishListStore();
 const { wishlist } = storeToRefs(storeWishlist);
 
+const storeCart = useCartStore();
+const { cartList } = storeToRefs(storeCart);
+
 const toast = useToast();
+
+const option3 =ref([]);
+const setting =ref([]);
 
 // Ensure MasonryWall refreshes with computed data
 const filteredWishlist = computed(() => wishlist.value);
-// const filteredCart = computed(() => cart.value);
+const filteredCart = computed(() => cartList.value);
+const filteredOption3 = computed(() => option3.value);
+const filteredSetting = computed(() => setting.value);
 
 const tabTitle = ref([
     { title: "WISHLIST", data: filteredWishlist },
-    { title: "CART", data: filteredWishlist },
-    { title: "OPTION3", data: filteredWishlist },
-    { title: "SETTING", data: filteredWishlist },
+    { title: "CART", data: filteredCart },
+    { title: "OPTION3", data: filteredOption3 },
+    { title: "SETTING", data: filteredSetting },
 ]);
 
+// REMOVE FROM WISHLIST
 const removeFromWishList = (productId) => {
   storeWishlist.$patch((state) => {
     state.wishlist = state.wishlist.filter((item) => item.id !== productId);
@@ -36,11 +46,26 @@ const removeFromWishList = (productId) => {
   });
 };
 
-const cart = ref([])
+const removeFromCart = (productId) => {
+    storeCart.$patch((state) => {
+    state.cartList = state.cartList.filter((item) => item.id !== productId);
+    });
+
+    toast.error("Removed from cart", {
+    position: "bottom-right",
+    hideProgressBar: true,
+    closeButton: false,
+    icon: false,
+    timeout: 3000,
+    });
+};
+
+
 // WHEN NO PRODUCT EXIST
 const noWishlist = computed(() => wishlist.value.length === 0);
-const noCart = computed(() => cart.value.length === 0);
+const noCart = computed(() => cartList.value.length === 0);
 
+const noContent = computed(() => option3.value.length === 0 || setting.value.length === 0);
 </script>
 <template>
     <v-container class="ItemContainer">
@@ -58,7 +83,7 @@ const noCart = computed(() => cart.value.length === 0);
                     :class="{ 'active-tab': tab === item.title }">
                     <v-badge v-if="item.title === 'WISHLIST' || item.title === 'CART'" 
                     color="#FE5253" :content="item.title === 'WISHLIST' ? wishlist.length : 
-                                              item.title === 'CART' ? '0' : ''">
+                                              item.title === 'CART' ? cartList.length : ''">
                         {{ item.title }}
                     </v-badge>
                     <template v-else>
@@ -76,6 +101,10 @@ const noCart = computed(() => cart.value.length === 0);
                     </div>
                     <div v-if="item.title === 'CART' && noCart" class="no-results">
                         CART EMPTY
+                    </div>
+
+                    <div v-if="(item.title === 'OPTION3' || item.title === 'SETTING') && noContent" class="no-results">
+                        NO CONTENT
                     </div>
                         <MasonryWall
                             :items="item.data"
@@ -98,7 +127,11 @@ const noCart = computed(() => cart.value.length === 0);
                                         ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
                                     </p>
                                 </div>
-                                <v-btn @click="() => removeFromWishList(item.id)" icon="$close" class="bg-black text-white closeBTN">
+                                <!-- 2 CLOSE BUTTON BECAUSE THERE IS CONFLICT WITH ONCLICK EVENT -->
+                                <v-btn v-if="tab === 'WISHLIST' && wishlist.includes(item)" @click="() => removeFromWishList(item.id)" icon="$close" class="bg-black text-white closeBTN">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                                <v-btn v-if="tab === 'CART' && cartList.includes(item)" @click="() => removeFromCart(item.id)" icon="$close" class="bg-black text-white closeBTN">
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
                             </v-card>
@@ -231,6 +264,7 @@ const noCart = computed(() => cart.value.length === 0);
         bottom: 10px;
     }
 }
+
 .no-results {
     background-color: #191919;
     color: white;

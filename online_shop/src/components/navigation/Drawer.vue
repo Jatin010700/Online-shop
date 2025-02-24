@@ -3,27 +3,34 @@ import { ref, watchEffect } from 'vue';
 import { useWishListStore } from '../../store_state/wishListState';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
+import { useCartStore } from '../../store_state/cartState';
 
 const drawer = ref(true);
+
 const storeWishlist = useWishListStore();
 const { wishlist } = storeToRefs(storeWishlist);
+
+const storeCart = useCartStore();
+const { cartList } = storeToRefs(storeCart);
+
 const route = useRoute();
 
 const store = ref([
-    { title: 'Click Me', link: '/Store' },
-    { title: 'Click Me', link: '/Store' },
-    { title: 'Click Me', link: '/Store' },
-    { title: 'Click Me', link: '/Store' },
+    { title: 'STORE PAGE 1', link: '/Store' },
+    { title: 'STORE PAGE 2', link: '/Store' },
+    { title: 'STORE PAGE 3', link: '/Store' },
+    { title: 'STORE PAGE 4', link: '/Store' },
 ])
 
 const account = ref([
     { title: 'My wishlist', link: '/MyItem', icon: "mdi-heart", value: false },
-    { title: 'My cart', link: '/MyItem', icon: "mdi-cart", value: true },
+    { title: 'My cart', link: '/MyItem', icon: "mdi-cart", value: false },
     { title: 'Settings', link: '/', icon: "mdi-cog", value: false },
 ]);
 
 watchEffect(() => {
   account.value[0].value = wishlist.value.length > 0; 
+  account.value[1].value = cartList.value.length > 0;
 });
 
 const isActive = (to) => route.path === to;

@@ -25,5 +25,5 @@
     "vite": "^6.1.0",
     "vite-plugin-vuetify": "^2.1.0"
   },
-  "proxy": "http://localhost:3000/"
+  "proxy": "http://localhost:5000/"
 }

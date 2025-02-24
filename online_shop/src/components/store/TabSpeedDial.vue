@@ -1,7 +1,7 @@
 <script setup>
 defineProps({
     clickWishList: Function,
-//   msg: String,
+    clickCart: Function,
 });
 </script>
 
@@ -20,7 +20,7 @@ defineProps({
         <v-btn @click="clickWishList" key="1" icon="$heart" class="bg-black text-white">
             <v-icon>mdi-heart</v-icon>
         </v-btn>
-        <v-btn key="2" icon="$cart" class="bg-black text-white">
+        <v-btn @click="clickCart" key="2" icon="$cart" class="bg-black text-white">
             <v-icon>mdi-cart</v-icon>
         </v-btn>
     </v-speed-dial>

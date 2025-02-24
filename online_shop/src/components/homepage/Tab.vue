@@ -5,6 +5,7 @@ import TabSpeedDial from '../store/TabSpeedDial.vue';
 import { useWishListStore } from '../../store_state/wishListState';
 import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
+import { useCartStore } from '../../store_state/cartState';
 
 const products =ref([]);
 const tab = ref(null);
@@ -13,7 +14,7 @@ const toast = useToast();
 
 onMounted(async () => {
     try {
-        const res = await axios.get("http://localhost:3000/products");
+        const res = await axios.get("http://localhost:5000/products");
         products.value = res.data.products;
         setTimeout(() => {
             loading.value = false;
@@ -69,6 +70,54 @@ const addItemToWishList = (productId) => {
       });
   }
 };
+
+// CART
+const storeCart = useCartStore();
+const { cartList } = storeToRefs(storeCart);
+
+const addItemToCart = (productId) => {
+  const cartProduct = products.value.find(product => product.id === productId);
+  const isAlreadyInCart = cartList.value.some(item => item.id === productId);
+
+  if (isAlreadyInCart) {
+    toast.error("Product already in cart", {
+      position: "bottom-right",
+      hideProgressBar: true,
+      closeButton: false,
+      icon: false,
+      timeout: 1500
+    });
+    return;
+  }
+
+  if (cartProduct) {
+    cartList.value.push({
+      id: cartProduct.id,
+      image: cartProduct.image,
+      title: cartProduct.title,
+      description: cartProduct.description,
+      item_status: cartProduct.item_status,
+      discount: cartProduct.discount,
+      price: cartProduct.price,
+      remaining_in_stock: cartProduct.remaining_in_stock,
+    });
+    toast("Product saved to cart", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 1500
+    });
+  } else {
+    toast.error("Adding product to cart FAILED!", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 3000
+      });
+  }
+};
 </script>
 
 <template>
@@ -101,7 +150,10 @@ const addItemToWishList = (productId) => {
                             <p v-if="!loading" class="item-status">{{ product.item_status }}</p>
                             <v-card-title v-if="!loading" class="title">{{ product.title }}</v-card-title>
                             <v-card-subtitle v-if="!loading" class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                            <TabSpeedDial v-if="!loading" :clickWishList="() => addItemToWishList(product.id)"/>
+                            <TabSpeedDial 
+                                :clickWishList="() => addItemToWishList(product.id)"
+                                :clickCart="() => addItemToCart(product.id)" 
+                            />
                     </v-card>
                     </v-tabs-window-item>
             
@@ -120,7 +172,10 @@ const addItemToWishList = (productId) => {
                                 ${{ product.discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price || "No Discount" }}
                             </v-card-subtitle>
                         </div>
-                        <TabSpeedDial :clickWishList="() => addItemToWishList(product.id)"/>
+                        <TabSpeedDial 
+                            :clickWishList="() => addItemToWishList(product.id)"
+                            :clickCart="() => addItemToCart(product.id)" 
+                        />
                     </v-card>
                     </v-tabs-window-item>
             
@@ -135,7 +190,10 @@ const addItemToWishList = (productId) => {
                         <p class="item-stock">IN STOCK: {{ product.remaining_in_stock }}</p>
                         <v-card-title class="title">{{ product.title }}</v-card-title>
                         <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                        <TabSpeedDial :clickWishList="() => addItemToWishList(product.id)"/>
+                        <TabSpeedDial 
+                            :clickWishList="() => addItemToWishList(product.id)"
+                            :clickCart="() => addItemToCart(product.id)" 
+                        />
                     </v-card>
                     </v-tabs-window-item>
                     </v-tabs-window>

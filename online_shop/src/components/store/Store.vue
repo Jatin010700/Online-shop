@@ -7,6 +7,7 @@ import Footer from '../homepage/Footer.vue'
 import { useWishListStore } from '../../store_state/wishListState';
 import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
+import { useCartStore } from '../../store_state/cartState';
 
 const store = ref([]);
 const allProducts = ref([]);
@@ -24,7 +25,7 @@ const toast = useToast();
 // PRODUCT API
 onMounted(async () => {
   try {
-      const res = await axios.get("http://localhost:3000/products");
+      const res = await axios.get("http://localhost:5000/products");
       allProducts.value = res.data.store;
       store.value = res.data.store.slice(0, itemsToShow.value);
       productId.value = allProducts.value.findIndex(product => product.id);
@@ -124,6 +125,54 @@ const addItemToWishList = (productId) => {
   }
 };
 
+// CART
+const storeCart = useCartStore();
+const { cartList } = storeToRefs(storeCart);
+
+const addItemToCart = (productId) => {
+  const cartProduct = allProducts.value.find(product => product.id === productId);
+  const isAlreadyInCart = cartList.value.some(item => item.id === productId);
+
+  if (isAlreadyInCart) {
+    toast.error("Product already in cart", {
+      position: "bottom-right",
+      hideProgressBar: true,
+      closeButton: false,
+      icon: false,
+      timeout: 1500
+    });
+    return;
+  }
+
+  if (cartProduct) {
+    cartList.value.push({
+      id: cartProduct.id,
+      image: cartProduct.image,
+      title: cartProduct.title,
+      description: cartProduct.description,
+      item_status: cartProduct.item_status,
+      discount: cartProduct.discount,
+      price: cartProduct.price,
+      remaining_in_stock: cartProduct.remaining_in_stock,
+    });
+    toast("Product saved to cart", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 1500
+    });
+  } else {
+    toast.error("Adding product to cart FAILED!", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 3000
+      });
+  }
+};
+
 // WHEN NO PRODUCT EXIST
 const noResults = computed(() => searchQuery.value && filteredProducts.value.length === 0);
 //  WHEN PRODUCT IS 0 or LESS THAN 8
@@ -159,7 +208,10 @@ const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProd
             ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
           </p>
         </div>
-        <TabSpeedDial :clickWishList="() => addItemToWishList(item.id)"/>
+        <TabSpeedDial 
+          :clickWishList="() => addItemToWishList(item.id)" 
+          :clickCart="() => addItemToCart(item.id)"
+          />
       </v-card>
     </template>
   </MasonryWall>
