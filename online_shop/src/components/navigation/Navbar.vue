@@ -1,7 +1,7 @@
 <script setup>
-import { ref, defineProps} from 'vue';
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import Login from '../userAccount/login.vue';
+import Login from '../user_account/Login.vue';
 
 const route = useRoute();
 

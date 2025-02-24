@@ -37,10 +37,10 @@ const images = ref([
       transition="fade-transition">
         <v-carousel
           height="400"
-          show-arrows="hover"
           cycle
+          show-arrows="hover"
           hide-delimiter-background
-          delimiter-icon="mdi-circle"
+          delimiter-icon="mdi-square"
           prev-icon="mdi-chevron-left"
           next-icon="mdi-chevron-right">
             <v-carousel-item v-for="(image, i) in images" :key="i" class="wrapText">
@@ -105,5 +105,21 @@ const images = ref([
 :deep(.v-application__wrap) {
   min-height: 0;
   background-color: #191919;
+}
+
+:deep(.v-carousel__controls__item .v-icon) {
+  transform: rotate(45deg);
+}
+
+:deep(.v-carousel__controls__item) {
+  border-radius: 0!important;
+
+  &:hover {
+    transform: rotate(45deg);
+  }
+}
+
+:deep(.v-btn--icon) {
+  border-radius: 0!important;
 }
 </style>

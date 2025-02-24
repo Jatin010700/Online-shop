@@ -1,17 +1,25 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '../homepage/HomePage.vue';
-import Store from '../store/Store.vue';
+import HomePage from '../components/homepage/HomePage.vue';
+import Store from '../components/store/Store.vue';
+import MyItem from '../components/user_account/Myitem.vue';
 
 const routes = [
-  { path: '/',
+  { 
+    path: '/',
     name: 'Home',
     component: HomePage,
    },
-  { path: '/Store',
+  { 
+    path: '/Store',
     name: 'Store',
     component: Store,
   },
+  {
+    path: '/MyItem',
+    name: 'MyItem',
+    component: MyItem,
+  }
 ];
 
 const router = createRouter({

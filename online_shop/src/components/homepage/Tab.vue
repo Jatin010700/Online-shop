@@ -1,24 +1,74 @@
 <script setup>
-    import { onMounted, ref } from 'vue';
-    import axios from "axios";
-    import TabSpeedDial from './TabSpeedDial.vue';
+import { onMounted, ref } from 'vue';
+import axios from "axios";
+import TabSpeedDial from '../store/TabSpeedDial.vue';
+import { useWishListStore } from '../../store_state/wishListState';
+import { storeToRefs } from 'pinia';
+import { useToast } from 'vue-toastification';
 
-    const products =ref([]);
-    const tab = ref(null);
-    const loading = ref(true);
+const products =ref([]);
+const tab = ref(null);
+const loading = ref(true);
+const toast = useToast();
 
-    onMounted(async () => {
-        try {
-            const res = await axios.get("http://localhost:3000/products");
-            products.value = res.data.products;
-            setTimeout(() => {
-                loading.value = false;
-            }, 3000);
-            console.log(res.data)
-        } catch (err) {
-            console.error(err);
-        }
+onMounted(async () => {
+    try {
+        const res = await axios.get("http://localhost:3000/products");
+        products.value = res.data.products;
+        setTimeout(() => {
+            loading.value = false;
+        }, 3000);
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+    // WISHLIST
+const storeWishlist = useWishListStore();
+const { wishlist } = storeToRefs(storeWishlist);
+
+const addItemToWishList = (productId) => {
+  const wishListProduct = products.value.find(product => product.id === productId);
+  const isAlreadyInWishlist = wishlist.value.some(item => item.id === productId);
+
+  if (isAlreadyInWishlist) {
+    toast.error("Product already in wishlist", {
+      position: "bottom-right",
+      hideProgressBar: true,
+      closeButton: false,
+      icon: false,
+      timeout: 1500
     });
+    return;
+  }
+
+  if (wishListProduct) {
+    wishlist.value.push({
+      id: wishListProduct.id,
+      image: wishListProduct.image,
+      title: wishListProduct.title,
+      item_status: wishListProduct.item_status,
+      discount: wishListProduct.discount,
+      price: wishListProduct.price,
+      remaining_in_stock: wishListProduct.remaining_in_stock,
+    });
+    toast("Product saved to wishlist", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 1500
+    });
+  } else {
+    toast.error("Adding product to wishlist FAILED!", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 3000
+      });
+  }
+};
 </script>
 
 <template>
@@ -46,19 +96,12 @@
                         class="tabCard"
                         max-width="344"
                         link>
-                        <v-skeleton-loader v-if="loading" :loading="loading" type="image, article">
-                            <v-img :src="product.image" height="75%" cover></v-img>
-                            <p class="item-status">{{ product.item_status }}</p>
-                            <v-card-title class="title">{{ product.title }}</v-card-title>
-                            <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                            <TabSpeedDial/>
-                        </v-skeleton-loader>
-                        
-                        <v-img v-if="!loading" :src="product.image" height="75%" cover></v-img>
-                        <p v-if="!loading" class="item-status">{{ product.item_status }}</p>
-                        <v-card-title v-if="!loading" class="title">{{ product.title }}</v-card-title>
-                        <v-card-subtitle v-if="!loading" class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                        <TabSpeedDial v-if="!loading"/>
+                        <v-skeleton-loader v-if="loading" :loading="loading" type="image, article"/>
+                            <v-img v-if="!loading" :src="product.image" height="75%" cover></v-img>
+                            <p v-if="!loading" class="item-status">{{ product.item_status }}</p>
+                            <v-card-title v-if="!loading" class="title">{{ product.title }}</v-card-title>
+                            <v-card-subtitle v-if="!loading" class="price">${{ product.price || "No Price" }}</v-card-subtitle>
+                            <TabSpeedDial v-if="!loading" :clickWishList="() => addItemToWishList(product.id)"/>
                     </v-card>
                     </v-tabs-window-item>
             
@@ -77,7 +120,7 @@
                                 ${{ product.discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price || "No Discount" }}
                             </v-card-subtitle>
                         </div>
-                        <TabSpeedDial/>
+                        <TabSpeedDial :clickWishList="() => addItemToWishList(product.id)"/>
                     </v-card>
                     </v-tabs-window-item>
             
@@ -92,7 +135,7 @@
                         <p class="item-stock">IN STOCK: {{ product.remaining_in_stock }}</p>
                         <v-card-title class="title">{{ product.title }}</v-card-title>
                         <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                        <TabSpeedDial/>
+                        <TabSpeedDial :clickWishList="() => addItemToWishList(product.id)"/>
                     </v-card>
                     </v-tabs-window-item>
                     </v-tabs-window>

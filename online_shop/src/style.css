@@ -30,4 +30,21 @@ body {
 
 .Vue-Toastification__toast.customToast {
   border-radius: 0!important;
+  font-family: "Teko", serif;
+}
+
+.Vue-Toastification__toast-body {
+  font-size: 24px!important;
+  text-align: center;
+}
+
+.Vue-Toastification__container.bottom-right {
+  right: 1.2em!important;
+  bottom: 0!important;
+}
+
+.Vue-Toastification__toast--default {
+  background-color: white!important;
+  color: #191919!important;
+  border: 2px solid #191919;
 }

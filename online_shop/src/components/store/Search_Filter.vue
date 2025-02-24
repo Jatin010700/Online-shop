@@ -1,6 +1,6 @@
 <script setup>
-import { defineProps, defineEmits, ref, computed, inject } from 'vue';
-import Navbar from '../navigation/navbar.vue';
+import { ref, computed, inject } from 'vue';
+import Navbar from '../navigation/Navbar.vue';
 import { useToast } from "vue-toastification";
 
 const dialog = ref(false);
@@ -8,6 +8,7 @@ const slider = ref(0);
 const slider2 = ref(0);
 const max2 = ref(1000);
 const amenities = ref([]);
+const toast = useToast();
 
 const sliderPriceDecimal = (sliderRef) => computed({
   get: () => Number(sliderRef.value).toFixed(2),
@@ -46,7 +47,6 @@ const newItem = products.value
   const pricelessthen100 = products.value
   .filter(product => product.price < 100)
   .map(product => product.price);
-
 
 // FILTER CHECKBOX
 const items = ref([
@@ -88,10 +88,9 @@ const handleSave = (e) => {
 
   // Filter selected filters where value is true (checkbox is checked)
   const selectedFilters = items.value.filter(item => item.value).map(item => item.title);
-  const toast = useToast();
   // Check if no filters are selected
   if (selectedFilters.length === 0) {
-      toast.error("Please select at least one option before saving.", {
+      toast.error("Please select at least one option before saving", {
         position: "bottom-right",
         hideProgressBar: true,
         closeButton: false,

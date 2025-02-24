@@ -1,7 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
+import { useWishListStore } from '../../store_state/wishListState';
+import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
 
 const drawer = ref(true);
+const storeWishlist = useWishListStore();
+const { wishlist } = storeToRefs(storeWishlist);
+const route = useRoute();
 
 const store = ref([
     { title: 'Click Me', link: '/Store' },
@@ -11,17 +17,23 @@ const store = ref([
 ])
 
 const account = ref([
-    { title: 'My wishlist', link: '/', icon: "mdi-heart" },
-    { title: 'My cart', link: '/', icon: "mdi-cart" },
-    { title: 'Settings', link: '/', icon: "mdi-cog" },
-])
+    { title: 'My wishlist', link: '/MyItem', icon: "mdi-heart", value: false },
+    { title: 'My cart', link: '/MyItem', icon: "mdi-cart", value: true },
+    { title: 'Settings', link: '/', icon: "mdi-cog", value: false },
+]);
+
+watchEffect(() => {
+  account.value[0].value = wishlist.value.length > 0; 
+});
+
+const isActive = (to) => route.path === to;
 </script>
 <template>
     <v-app class="drawerApp">
         <v-navigation-drawer v-model="drawer" location="left" class="NavDrawer" expand-on-hover rail rail-width="68">
             <v-list>
-                <v-btn variant="text">
-                    <router-link to="/" class="link">
+                <v-btn variant="text" :class="{ 'active-link': isActive('/'), 'inactive-link': !isActive('/') }">
+                    <router-link to="/">
                         <v-list-item title="Home" prepend-icon="mdi-home"></v-list-item>
                     </router-link>
                 </v-btn>
@@ -30,8 +42,8 @@ const account = ref([
                 open-on-hover
                 location="end">
                     <template v-slot:activator="{ props }">
-                        <v-btn variant="text" v-bind="props">
-                            <router-link to="/" class="link">
+                        <v-btn variant="text" v-bind="props" :class="{ 'active-link': isActive('/MyItem'), 'inactive-link': !isActive('/MyItem') }">
+                            <router-link to="/MyItem">
                                 <v-list-item title="Account" prepend-icon="mdi-account"></v-list-item>
                             </router-link>
                         </v-btn>
@@ -40,7 +52,11 @@ const account = ref([
                             <v-list-item
                             v-for="(item, index) in account"
                             :key="index">
-                            <v-btn variant="text" :prepend-icon="item.icon">
+                            <v-btn variant="text">
+                                <v-badge v-if="item.value" dot color="#FE5253">
+                                    <v-icon :icon="item.icon" size="x-large"></v-icon>
+                                </v-badge>
+                                <v-icon v-if="!item.value" :icon="item.icon" size="x-large"></v-icon>
                                 <router-link :to="item.link" class="link" >
                                     {{ item.title }}
                                 </router-link>
@@ -53,7 +69,7 @@ const account = ref([
                 open-on-hover
                 location="end">
                     <template v-slot:activator="{ props }">
-                        <v-btn variant="text" v-bind="props">
+                        <v-btn variant="text" v-bind="props" :class="{ 'active-link': isActive('/Store'), 'inactive-link': !isActive('/Store') }">
                             <router-link to="/Store" class="link">
                                 <v-list-item title="Store" prepend-icon="mdi-store"></v-list-item>
                             </router-link>
@@ -72,15 +88,16 @@ const account = ref([
                     </v-list>
                 </v-menu>
                 
-                <v-btn variant="text" class="link">
-                    <router-link>
+                <v-btn variant="text" :class="{ 'active-link': isActive('/'), 'inactive-link': !isActive('/') }">
+                    <router-link to="/">
                         <v-list-item title="Cart" prepend-icon="mdi-cart"></v-list-item>
                     </router-link>
                 </v-btn>
+                
+                <v-btn variant="text" class="logOutBtn">
+                    <v-icon icon="mdi-power"></v-icon>
+                </v-btn>
             </v-list>
-            <v-btn variant="text" class="logOutBtn">
-                <v-icon icon="mdi-power"></v-icon>
-            </v-btn>
         </v-navigation-drawer>
     </v-app>
 </template>
@@ -94,7 +111,7 @@ const account = ref([
     .NavDrawer {
         :deep(.v-list-item-title) {
             font-size: 24px;
-            color: #191919;
+            // color: #191919;
         }
 
         .v-btn.v-btn--density-default {
@@ -115,17 +132,26 @@ const account = ref([
         }
 
         :deep(.v-list-item__prepend > .v-icon) {
-            color: #191919;
+            // color: #191919;
             opacity: 1;
             font-size: 35px;
         }
 
         .logOutBtn {
             position: absolute;
-            bottom: 10px;
-            font-size: 24px;
+            bottom: 0;
+            font-size: 30px;
             justify-content: center!important;
         }
+    }
+
+    .v-list {
+        padding: 0;
+        height: 100%;
+    }
+    
+    :deep(.v-navigation-drawer--left) {
+        border-right-width: 0!important;
     }
 }
 
@@ -152,7 +178,7 @@ const account = ref([
         padding-inline: 0!important;
     }
     a {
-        color: #191919!important;
+        color: #191919;
         display: inline-block;
         width: 225px;
         padding: 10px;
@@ -162,4 +188,24 @@ const account = ref([
         min-height: 0;
     }
 }
+
+.active-link {
+    background-color: #191919!important;
+    transition: 0.5s;
+
+    :deep(.v-list-item__prepend > .v-icon),
+    :deep(.v-list-item-title) {
+        color: white;
+    }
+  }
+
+  .inactive-link {
+    background-color: white!important;
+    transition: 0.5s;
+
+    :deep(.v-list-item__prepend > .v-icon),
+    :deep(.v-list-item-title) {
+        color: #191919;
+    }
+  }
 </style>

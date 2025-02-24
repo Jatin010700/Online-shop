@@ -9,10 +9,12 @@ import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import MasonryWall from '@yeger/vue-masonry-wall'
 
-import router from './components/router'
+import router from './router/index.js'
 
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+
+import { createPinia } from 'pinia'
 
 const vuetify = createVuetify({
     components,
@@ -32,8 +34,11 @@ const vuetify = createVuetify({
     },
   })
 
+const pinia = createPinia()
+
 createApp(App)
 .use(router)
+.use(pinia)
 .use(vuetify)
 .use(MasonryWall)
 .use(Toast, {

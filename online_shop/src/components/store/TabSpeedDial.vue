@@ -1,8 +1,14 @@
+<script setup>
+defineProps({
+    clickWishList: Function,
+//   msg: String,
+});
+</script>
+
 <template>
-<v-speed-dial
+    <v-speed-dial
         location="top center"
-        transition="scale-transition"
-        >
+        transition="scale-transition">
         <template v-slot:activator="{ props: activatorProps }">
             <v-fab
             v-bind="activatorProps"
@@ -11,7 +17,7 @@
             class="tabSpeedDial"></v-fab>
         </template>
 
-        <v-btn key="1" icon="$heart" class="bg-black text-white">
+        <v-btn @click="clickWishList" key="1" icon="$heart" class="bg-black text-white">
             <v-icon>mdi-heart</v-icon>
         </v-btn>
         <v-btn key="2" icon="$cart" class="bg-black text-white">
@@ -33,6 +39,7 @@
         z-index: 1;
     }
 }
+
 :deep(.v-btn--icon) {
     border-radius: 0!important;
 }

@@ -2,16 +2,24 @@
 import { computed, onMounted, provide, ref, watch } from 'vue';
 import axios from "axios";
 import Search_Filter from './Search_Filter.vue';
-import TabSpeedDial from '../homepage/TabSpeedDial.vue';
+import TabSpeedDial from './TabSpeedDial.vue';
 import Footer from '../homepage/Footer.vue'
+import { useWishListStore } from '../../store_state/wishListState';
+import { storeToRefs } from 'pinia';
+import { useToast } from 'vue-toastification';
 
 const store = ref([]);
 const allProducts = ref([]);
 provide('products', allProducts);
-const loading = ref(true);
-const itemsToShow = ref(8);
+
 const searchQuery = ref("");
 const selectedFilters = ref([]);
+
+const productId = ref([]);
+
+const loading = ref(true);
+const itemsToShow = ref(8);
+const toast = useToast();
 
 // PRODUCT API
 onMounted(async () => {
@@ -19,13 +27,14 @@ onMounted(async () => {
       const res = await axios.get("http://localhost:3000/products");
       allProducts.value = res.data.store;
       store.value = res.data.store.slice(0, itemsToShow.value);
+      productId.value = allProducts.value.findIndex(product => product.id);
       setTimeout(() => {
-          loading.value = false;
+        loading.value = false;
       }, 3000);
-  } catch (err) {
+    } catch (err) {
       console.error(err);
-  }
-});
+    }
+  });
 
 //SHOW MORE PRODUCT
 const showMore = () => {
@@ -67,6 +76,54 @@ watch(searchQuery, () => {
   }, 3000);
 });
 
+// WISHLIST
+const storeWishlist = useWishListStore();
+const { wishlist } = storeToRefs(storeWishlist);
+
+const addItemToWishList = (productId) => {
+  const wishListProduct = allProducts.value.find(product => product.id === productId);
+  const isAlreadyInWishlist = wishlist.value.some(item => item.id === productId);
+
+  if (isAlreadyInWishlist) {
+    toast.error("Product already in wishlist", {
+      position: "bottom-right",
+      hideProgressBar: true,
+      closeButton: false,
+      icon: false,
+      timeout: 1500
+    });
+    return;
+  }
+
+  if (wishListProduct) {
+    wishlist.value.push({
+      id: wishListProduct.id,
+      image: wishListProduct.image,
+      title: wishListProduct.title,
+      description: wishListProduct.description,
+      item_status: wishListProduct.item_status,
+      discount: wishListProduct.discount,
+      price: wishListProduct.price,
+      remaining_in_stock: wishListProduct.remaining_in_stock,
+    });
+    toast("Product saved to wishlist", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 1500
+    });
+  } else {
+    toast.error("Adding product to wishlist FAILED!", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 3000
+      });
+  }
+};
+
 // WHEN NO PRODUCT EXIST
 const noResults = computed(() => searchQuery.value && filteredProducts.value.length === 0);
 //  WHEN PRODUCT IS 0 or LESS THAN 8
@@ -87,24 +144,7 @@ const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProd
     :column-width="300"
     :gap="20">
     <template #default="{ item }">
-      <v-skeleton-loader v-if="loading" :loading="loading" type="image, article">
-      <v-card class="storeContainer">
-        <v-img :src="item.image" height="200"></v-img>
-        <p class="item-status" v-if="item.item_status && !loading || item.discount !== null  && !loading">
-          {{ item.item_status || "-" + item.discount + "%" }}
-        </p>
-        <p class="item-stock">IN STOCK: {{ item.remaining_in_stock }}</p>
-        <v-card-title>{{ item.title }}</v-card-title>
-        <p class="description">{{ item.description }}</p>
-        <div class="wrapPrice">
-          <p :class="{'priceDiscount': item.discount !== null}">${{ item.price }}</p>
-          <p v-if="item.discount !== null">
-            ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
-          </p>
-        </div>
-        <TabSpeedDial/>
-      </v-card>
-    </v-skeleton-loader>
+      <v-skeleton-loader v-if="loading" :loading="loading" type="image, article" />
     <v-card class="storeContainer">
         <v-img v-if="!loading" :src="item.image" height="200"></v-img>
         <p class="item-status" v-if="item.item_status && !loading || item.discount !== null  && !loading">
@@ -119,13 +159,17 @@ const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProd
             ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
           </p>
         </div>
-        <TabSpeedDial/>
+        <TabSpeedDial :clickWishList="() => addItemToWishList(item.id)"/>
       </v-card>
     </template>
   </MasonryWall>
 
   <div class="show-more-container">
-    <v-btn @click="showMore"  v-if="!nobtn && itemsToShow < allProducts.length"> Show More</v-btn>
+    <v-btn 
+    @click="showMore" 
+    v-if="!nobtn && itemsToShow < allProducts.length">
+      Show More
+    </v-btn>
   </div>
 
   <Footer/>
@@ -188,6 +232,7 @@ const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProd
     }
   }
 }
+
 .no-results {
   text-align: center;
   font-size: 3.2em;
