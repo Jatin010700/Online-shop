@@ -1,1 +1,4 @@
 # Online-shop
+
+### NOTES:
+- #### REF:

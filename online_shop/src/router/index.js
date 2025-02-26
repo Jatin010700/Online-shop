@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../components/homepage/HomePage.vue';
 import Store from '../components/store/Store.vue';
 import MyItem from '../components/user_account/Myitem.vue';
+import Checkout from '../components/checkout/Checkout.vue';
 
 const routes = [
   { 
@@ -19,6 +20,11 @@ const routes = [
     path: '/MyItem',
     name: 'MyItem',
     component: MyItem,
+  },
+  {
+    path: '/CheckOut',
+    name: 'CheckOut',
+    component: Checkout,
   }
 ];
 

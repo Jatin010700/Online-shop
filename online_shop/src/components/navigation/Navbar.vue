@@ -21,7 +21,7 @@ const items = ref([
   {
     title: 'Cart',
     disabled: false,
-    to: '/',
+    to: '/CheckOut',
   },
 ]);
 

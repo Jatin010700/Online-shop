@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, inject } from 'vue';
-import Navbar from '../navigation/Navbar.vue';
+import Navbar from '../navigation/navbar.vue';
 import { useToast } from "vue-toastification";
 
 const dialog = ref(false);
@@ -245,7 +245,7 @@ const clearSearch = () => {
     </v-dialog>
   </div>
 
-      <Navbar propNavbarContainer="propNavContainer"/>
+      <Navbar propNavbarContainer="classPropNavContainer"/>
       </div>
     </v-container>
   </template>
@@ -280,7 +280,7 @@ const clearSearch = () => {
     }
 }
 
-.propNavContainer {
+.classPropNavContainer {
     margin: 0;
     height: 0;
 }

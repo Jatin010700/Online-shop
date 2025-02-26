@@ -34,7 +34,7 @@ const tabTitle = ref([
 // REMOVE FROM WISHLIST
 const removeFromWishList = (productId) => {
   storeWishlist.$patch((state) => {
-    state.wishlist = state.wishlist.filter((item) => item.id !== productId);
+        state.wishlist = state.wishlist.filter((item) => item.id !== productId);
   });
 
   toast.error("Removed from wishlist", {
@@ -48,7 +48,7 @@ const removeFromWishList = (productId) => {
 
 const removeFromCart = (productId) => {
     storeCart.$patch((state) => {
-    state.cartList = state.cartList.filter((item) => item.id !== productId);
+        state.cartList = state.cartList.filter((item) => item.id !== productId);
     });
 
     toast.error("Removed from cart", {
@@ -102,7 +102,6 @@ const noContent = computed(() => option3.value.length === 0 || setting.value.len
                     <div v-if="item.title === 'CART' && noCart" class="no-results">
                         CART EMPTY
                     </div>
-
                     <div v-if="(item.title === 'OPTION3' || item.title === 'SETTING') && noContent" class="no-results">
                         NO CONTENT
                     </div>

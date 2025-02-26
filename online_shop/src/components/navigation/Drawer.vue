@@ -40,8 +40,8 @@ const isActive = (to) => route.path === to;
         <v-navigation-drawer v-model="drawer" location="left" class="NavDrawer" expand-on-hover rail rail-width="68">
             <v-list>
                 <v-btn variant="text" :class="{ 'active-link': isActive('/'), 'inactive-link': !isActive('/') }">
-                    <router-link to="/">
-                        <v-list-item title="Home" prepend-icon="mdi-home"></v-list-item>
+                    <router-link to="/" class="link">
+                        <v-list-item title="Home" prepend-icon="mdi-home" ></v-list-item>
                     </router-link>
                 </v-btn>
                 <v-menu 
@@ -50,7 +50,7 @@ const isActive = (to) => route.path === to;
                 location="end">
                     <template v-slot:activator="{ props }">
                         <v-btn variant="text" v-bind="props" :class="{ 'active-link': isActive('/MyItem'), 'inactive-link': !isActive('/MyItem') }">
-                            <router-link to="/MyItem">
+                            <router-link to="/MyItem" class="link">
                                 <v-list-item title="Account" prepend-icon="mdi-account"></v-list-item>
                             </router-link>
                         </v-btn>
@@ -95,8 +95,8 @@ const isActive = (to) => route.path === to;
                     </v-list>
                 </v-menu>
                 
-                <v-btn variant="text" :class="{ 'active-link': isActive('/'), 'inactive-link': !isActive('/') }">
-                    <router-link to="/">
+                <v-btn variant="text" :class="{ 'active-link': isActive('/CheckOut'), 'inactive-link': !isActive('/CheckOut') }">
+                    <router-link to="/CheckOut" class="link">
                         <v-list-item title="Cart" prepend-icon="mdi-cart"></v-list-item>
                     </router-link>
                 </v-btn>
@@ -160,6 +160,7 @@ const isActive = (to) => route.path === to;
     :deep(.v-navigation-drawer--left) {
         border-right-width: 0!important;
     }
+    
 }
 
 .custom-menu {
@@ -184,6 +185,7 @@ const isActive = (to) => route.path === to;
     .v-list-item--one-line {
         padding-inline: 0!important;
     }
+
     a {
         color: #191919;
         display: inline-block;

@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { useCartStore } from '../../store_state/cartState';
 
-const products =ref([]);
+const products = ref([]);
 const tab = ref(null);
 const loading = ref(true);
 const toast = useToast();
@@ -100,6 +100,7 @@ const addItemToCart = (productId) => {
       discount: cartProduct.discount,
       price: cartProduct.price,
       remaining_in_stock: cartProduct.remaining_in_stock,
+      quantity: cartProduct.quantity,
     });
     toast("Product saved to cart", {
         position: "bottom-right",
