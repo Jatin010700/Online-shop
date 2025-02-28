@@ -20,7 +20,7 @@ defineProps({
       </p>
     </div>
     <div class="wrapImg1">
-      <img src="../../assets/headset.jpg" class="" alt="" width="500px" height="100%"/>
+      <img src="/headset.webp" class="" alt="" width="500px" height="100%"/>
       <p class="discount">-50%</p>
       <p class="imgName">Headset scarlet version 2.58</p>
     </div>
@@ -36,7 +36,7 @@ defineProps({
       vero sint recusandae cum tempora nemo commodi soluta deleniti.
     </p>
   </div>
-    <img src="../../assets/laptop.jpg" class="" alt="" width="500px" height="100%"/>
+    <img src="/laptop.webp" class="" alt="" width="500px" height="670px"/>
     <p class="imgName">Laptop Asus version 1.538</p>
   </div>
 </div>

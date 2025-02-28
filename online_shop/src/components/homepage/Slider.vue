@@ -4,23 +4,23 @@ import Tab from './Tab.vue'
 
 const images = ref([
   {
-    imageURL: new URL('../../assets/mouse.jpg', import.meta.url).href,
+    imageURL: new URL('../../assets/mouse.webp', import.meta.url).href,
     title: 'Mouse scarlet version 2.58',
   },
   {
-    imageURL: new URL('../../assets/keyboard.jpg', import.meta.url).href,
+    imageURL: new URL('../../assets/keyboard.webp', import.meta.url).href,
     title: 'Keyboard razer scarlet version 1.4',
   },
   {
-    imageURL: new URL('../../assets/game1.jpg', import.meta.url).href,
+    imageURL: new URL('../../assets/game.webp', import.meta.url).href,
     title: 'Elden ring',
   },
   {
-    imageURL: new URL('../../assets/mouse.jpg', import.meta.url).href,
+    imageURL: new URL('../../assets/mouse.webp', import.meta.url).href,
     title: 'Mouse scarlet version 2.58',
   },
   {
-    imageURL: new URL('../../assets/keyboard.jpg', import.meta.url).href,
+    imageURL: new URL('../../assets/keyboard.webp', import.meta.url).href,
     title: 'Keyboard razer scarlet version 1.4',
   }
 ]);

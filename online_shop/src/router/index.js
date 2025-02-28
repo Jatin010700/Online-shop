@@ -5,6 +5,7 @@ import Store from '../components/store/Store.vue';
 import MyItem from '../components/user_account/Myitem.vue';
 import Checkout from '../components/checkout/Checkout.vue';
 
+// CHECK VUE ROUTE FOR PROTECTED ROUTES
 const routes = [
   { 
     path: '/',
