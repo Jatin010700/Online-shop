@@ -35,7 +35,7 @@ defineProps({ propFooterSub: String });
               {{ link }}
             </v-btn>
             <div class="bg-black d-flex w-100 align-center px-4 ml-16">
-                <strong>Get connected with us on social networks!</strong>
+                Get connected with us on social networks!
 
                 <v-spacer></v-spacer>
 
@@ -49,7 +49,7 @@ defineProps({ propFooterSub: String });
                 ></v-btn>
             </div>
             <v-col class="text-center mt-4" cols="12">
-              {{ new Date().getFullYear() }} — <strong>Created by Jatin Oomajee</strong>
+              {{ new Date().getFullYear() }} — <b>Created by Jatin Oomajee</b>
             </v-col>
           </v-row>
         </v-footer>

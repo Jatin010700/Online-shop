@@ -60,6 +60,54 @@ const removeFromCart = (productId) => {
     });
 };
 
+const addItemToCart = (productId) => {
+  const cartProduct = wishlist.value.find(product => product.id === productId);
+  const isAlreadyInCart = cartList.value.some(item => item.id === productId);
+
+  if (isAlreadyInCart) {
+    toast.error("Product already in cart", {
+      position: "bottom-right",
+      hideProgressBar: true,
+      closeButton: false,
+      icon: false,
+      timeout: 1500
+    });
+    return;
+  }
+
+  if (cartProduct) {
+    cartList.value.push({
+      id: cartProduct.id,
+      image: cartProduct.image,
+      title: cartProduct.title,
+      description: cartProduct.description,
+      item_status: cartProduct.item_status,
+      discount: cartProduct.discount,
+      price: cartProduct.price,
+      remaining_in_stock: cartProduct.remaining_in_stock,
+      quantity: cartProduct.quantity ?? 1,
+    });
+
+    const productName = cartProduct.title;
+
+    toast(`${productName} Added to your cart`, {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 1500
+    });
+  } else {
+    toast.error("FAILED! to add product", {
+        position: "bottom-right",
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        timeout: 3000
+      });
+  }
+};
+
 
 // WHEN NO PRODUCT EXIST
 const noWishlist = computed(() => wishlist.value.length === 0);
@@ -126,10 +174,25 @@ const noContent = computed(() => option3.value.length === 0 || setting.value.len
                                         ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
                                     </p>
                                 </div>
-                                <!-- 2 CLOSE BUTTON BECAUSE THERE IS CONFLICT WITH ONCLICK EVENT -->
-                                <v-btn v-if="tab === 'WISHLIST' && wishlist.includes(item)" @click="() => removeFromWishList(item.id)" icon="$close" class="bg-black text-white closeBTN">
-                                    <v-icon>mdi-close</v-icon>
-                                </v-btn>
+                                <!-- REMOVE WISHLIST BUTTON AND ADD TO CART BUTTON -->
+                                <v-speed-dial
+                                    location="top center"
+                                    transition="scale-transition"
+                                    open-on-hover
+                                    v-if="tab === 'WISHLIST' && wishlist.includes(item)">
+                                    <template v-slot:activator="{ props: activatorProps }">
+                                        <v-fab
+                                        v-bind="activatorProps"
+                                        size="large"
+                                        icon="$close"
+                                        class="closeBTN"
+                                        @click="() => removeFromWishList(item.id)"></v-fab>
+                                    </template>
+                                    <!-- CART REMOVE BUTTON -->
+                                    <v-btn @click="() => addItemToCart(item.id)" key="2" icon="$cart" class="bg-black text-white">
+                                        <v-icon>mdi-cart</v-icon>
+                                    </v-btn>
+                                </v-speed-dial>
                                 <v-btn v-if="tab === 'CART' && cartList.includes(item)" @click="() => removeFromCart(item.id)" icon="$close" class="bg-black text-white closeBTN">
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
@@ -277,6 +340,10 @@ const noContent = computed(() => option3.value.length === 0 || setting.value.len
 
 :deep(.v-btn--icon) {
     border-radius: 0!important;
+    color: white;
+    background: #191919;
+    width: 48px;
+    height: 48px;
 }
 
 .v-btn--icon{

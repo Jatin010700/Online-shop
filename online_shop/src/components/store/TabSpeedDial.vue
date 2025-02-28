@@ -8,7 +8,8 @@ defineProps({
 <template>
     <v-speed-dial
         location="top center"
-        transition="scale-transition">
+        transition="scale-transition"
+        open-on-hover>
         <template v-slot:activator="{ props: activatorProps }">
             <v-fab
             v-bind="activatorProps"
@@ -37,6 +38,8 @@ defineProps({
         background-color: #191919;
         color: white;
         z-index: 1;
+        width: 48px;
+        height: 48px;
     }
 }
 

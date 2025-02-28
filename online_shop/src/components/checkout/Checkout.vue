@@ -98,7 +98,7 @@ const next = () => {
                 <thead>
                   <tr>
                     <th>Description</th>
-                    <th class="text-end">Quantity</th>
+                    <th class="text-end quantity">Quantity</th>
                     <th class="text-end">Discount</th>
                     <th class="text-end">Price</th>
                   </tr>
@@ -107,16 +107,16 @@ const next = () => {
                   <tr v-for="(product, index) in cartList" :key="index" class="test">
                     <td>{{ product.title }}</td>
                     <td class="text-end">
-                        <v-icon @click="increaseQty(product.id)"
-                            icon="mdi-arrow-up-thick" 
-                            style="margin-right: 5px;"></v-icon>
-                            {{ product.quantity }}
-                        <v-icon @click="decreaseQty(product.id)"
-                            icon="mdi-arrow-down-thick" 
-                            style="margin-left: 5px;"></v-icon>
+                      <v-btn icon variant="text" @click="increaseQty(product.id)" class="clickable">
+                          <v-icon icon="mdi-arrow-up-thick"></v-icon>
+                      </v-btn>
+                      {{ product.quantity }}
+                      <v-btn icon variant="text" @click="decreaseQty(product.id)" class="clickable">
+                          <v-icon icon="mdi-arrow-down-thick"></v-icon>
+                      </v-btn>
                     </td>
                     <td class="text-end"><span v-if="product.discount > 0">-{{ product.discount }}%</span></td>
-                    <td class="text-end">
+                    <td class="text-end fixWidth">
                         ${{ product.discount 
                             ? ((product.price * (1 - product.discount / 100)) * product.quantity).toFixed(2) 
                             : (product.price * product.quantity).toFixed(2) }}
@@ -167,7 +167,7 @@ const next = () => {
                     <th>Shipping</th>
                     <td></td>
                     <td></td>
-                    <th class="text-end">${{ shipping }}</th>
+                    <th class="text-end">+ ${{ shipping }}</th>
                   </tr>
                   <tr>
                     <th>Total</th>
@@ -248,6 +248,8 @@ const next = () => {
         border-radius: 0!important;
         background-color: #191919;
         color: white;
+        font-size: 24px;
+        height: 50px;
 
         &.v-btn--disabled {
             opacity: 0;
@@ -272,6 +274,24 @@ const next = () => {
       display: flex;
       justify-content: center;
       align-items: center;
+  }
+
+  .quantity {
+    padding-right: 45px;
+  }
+
+  .fixWidth {
+    width: 20%;
+  }
+
+  .clickable {
+    background-color: transparent;
+    color: #191919;
+    font-size: 20px;
+  }
+
+  :deep(.v-btn__underlay) {
+    background-color: transparent;
   }
 }
 

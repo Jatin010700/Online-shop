@@ -6,8 +6,8 @@ import { PrismaClient } from '@prisma/client'
 dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
-
-app.listen(5000, () => console.log("Server running on port 5000"));
+const port = 5000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
 prisma.$connect().then(() => console.log("Connected to DB")).catch(err => console.error("DB Connection Error:", err));
 
 app.use(cors({

@@ -158,5 +158,11 @@
     .v-text-field {
       margin-top: 10px;
     }
+
+    :deep(.v-messages),
+    :deep(.v-field--error:not(.v-field--disabled) .v-label.v-field-label),
+    :deep(.v-field--error:not(.v-field--disabled) .v-field__outline) {
+      color: #FE5253!important;
+    }
 }
 </style>

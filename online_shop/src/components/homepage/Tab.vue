@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import axios from "axios";
 import TabSpeedDial from '../store/TabSpeedDial.vue';
-import { useWishListStore } from '../../store_state/wishListState';
+import { useWishListStore } from '../../store_state/wishlistState';
 import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { useCartStore } from '../../store_state/cartState';
@@ -31,7 +31,7 @@ const { wishlist } = storeToRefs(storeWishlist);
 const addItemToWishList = (productId) => {
   const wishListProduct = products.value.find(product => product.id === productId);
   const isAlreadyInWishlist = wishlist.value.some(item => item.id === productId);
-
+  console.log("Product found in wishlist:", wishListProduct);
   if (isAlreadyInWishlist) {
     toast.error("Product already in wishlist", {
       position: "bottom-right",
@@ -52,8 +52,12 @@ const addItemToWishList = (productId) => {
       discount: wishListProduct.discount,
       price: wishListProduct.price,
       remaining_in_stock: wishListProduct.remaining_in_stock,
+      quantity: wishlist.quantity ?? 1,
     });
-    toast("Product saved to wishlist", {
+
+    const productName = wishListProduct.title;
+
+    toast(`${productName} Added to your wishlist`, {
         position: "bottom-right",
         hideProgressBar: true,
         closeButton: false,
@@ -61,7 +65,7 @@ const addItemToWishList = (productId) => {
         timeout: 1500
     });
   } else {
-    toast.error("Adding product to wishlist FAILED!", {
+    toast.error("FAILED! to add product", {
         position: "bottom-right",
         hideProgressBar: true,
         closeButton: false,
@@ -78,7 +82,7 @@ const { cartList } = storeToRefs(storeCart);
 const addItemToCart = (productId) => {
   const cartProduct = products.value.find(product => product.id === productId);
   const isAlreadyInCart = cartList.value.some(item => item.id === productId);
-
+  console.log("Product found in wishlist:", cartProduct);
   if (isAlreadyInCart) {
     toast.error("Product already in cart", {
       position: "bottom-right",
@@ -100,9 +104,12 @@ const addItemToCart = (productId) => {
       discount: cartProduct.discount,
       price: cartProduct.price,
       remaining_in_stock: cartProduct.remaining_in_stock,
-      quantity: cartProduct.quantity,
+      quantity: cartProduct.quantity ?? 1,
     });
-    toast("Product saved to cart", {
+
+    const productName = cartProduct.title;
+
+    toast(`${productName} Added to your cart`, {
         position: "bottom-right",
         hideProgressBar: true,
         closeButton: false,
@@ -110,7 +117,7 @@ const addItemToCart = (productId) => {
         timeout: 1500
     });
   } else {
-    toast.error("Adding product to cart FAILED!", {
+    toast.error("FAILED! to add product", {
         position: "bottom-right",
         hideProgressBar: true,
         closeButton: false,
@@ -151,7 +158,8 @@ const addItemToCart = (productId) => {
                             <p v-if="!loading" class="item-status">{{ product.item_status }}</p>
                             <v-card-title v-if="!loading" class="title">{{ product.title }}</v-card-title>
                             <v-card-subtitle v-if="!loading" class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                            <TabSpeedDial 
+                            <TabSpeedDial
+                                v-if="!loading"
                                 :clickWishList="() => addItemToWishList(product.id)"
                                 :clickCart="() => addItemToCart(product.id)" 
                             />
@@ -297,6 +305,7 @@ const addItemToCart = (productId) => {
             }
         }
     }
+
     :deep(.v-skeleton-loader),
     :deep(.v-skeleton-loader__heading),
     :deep(.v-skeleton-loader__text) {
