@@ -1,120 +1,54 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
-import { useWishListStore } from '../../store_state/wishListState';
-import { storeToRefs } from 'pinia';
-import { useToast } from 'vue-toastification';
-import { useCartStore } from '../../store_state/cartState';
+    import { ref, computed } from 'vue';
+    import { useWishListStore } from '../../store_state/wishListState';
+    import { storeToRefs } from 'pinia';
+    import { useCartStore } from '../../store_state/cartState';
 
-const tab = ref("WISHLIST");
+    const tab = ref("WISHLIST");
 
-const storeWishlist = useWishListStore();
-const { wishlist } = storeToRefs(storeWishlist);
+    const storeWishlist = useWishListStore();
+    const { wishlist } = storeToRefs(storeWishlist);
 
-const storeCart = useCartStore();
-const { cartList } = storeToRefs(storeCart);
+    const storeCart = useCartStore();
+    const { cartList } = storeToRefs(storeCart);
 
-const toast = useToast();
+    const option3 =ref([]);
+    const setting =ref([]);
 
-const option3 =ref([]);
-const setting =ref([]);
+    // Ensure MasonryWall refreshes with computed data
+    const filteredWishlist = computed(() => wishlist.value);
+    const filteredCart = computed(() => cartList.value);
+    const filteredOption3 = computed(() => option3.value);
+    const filteredSetting = computed(() => setting.value);
 
-// Ensure MasonryWall refreshes with computed data
-const filteredWishlist = computed(() => wishlist.value);
-const filteredCart = computed(() => cartList.value);
-const filteredOption3 = computed(() => option3.value);
-const filteredSetting = computed(() => setting.value);
+    const tabTitle = ref([
+        { title: "WISHLIST", data: filteredWishlist },
+        { title: "CART", data: filteredCart },
+        { title: "OPTION3", data: filteredOption3 },
+        { title: "SETTING", data: filteredSetting },
+    ]);
 
-const tabTitle = ref([
-    { title: "WISHLIST", data: filteredWishlist },
-    { title: "CART", data: filteredCart },
-    { title: "OPTION3", data: filteredOption3 },
-    { title: "SETTING", data: filteredSetting },
-]);
+    // REMOVE FROM WISHLIST
+    const removeFromWishList = (productId) => {
+        storeWishlist.removeFromWishList(productId);
+    };
 
-// REMOVE FROM WISHLIST
-const removeFromWishList = (productId) => {
-  storeWishlist.$patch((state) => {
-        state.wishlist = state.wishlist.filter((item) => item.id !== productId);
-  });
+    // REMOVE FROM CART
+    const removeFromCart = (productId) => {
+        storeCart.removeFromCart(productId);
+    };
 
-  toast.error("Removed from wishlist", {
-    position: "bottom-right",
-    hideProgressBar: true,
-    closeButton: false,
-    icon: false,
-    timeout: 3000,
-  });
-};
+    // ADD TO CART
+    const addItemToCart = (productId) => {
+        storeCart.addItemFromWishListToCart(productId);
+    };
 
-const removeFromCart = (productId) => {
-    storeCart.$patch((state) => {
-        state.cartList = state.cartList.filter((item) => item.id !== productId);
-    });
-
-    toast.error("Removed from cart", {
-    position: "bottom-right",
-    hideProgressBar: true,
-    closeButton: false,
-    icon: false,
-    timeout: 3000,
-    });
-};
-
-const addItemToCart = (productId) => {
-  const cartProduct = wishlist.value.find(product => product.id === productId);
-  const isAlreadyInCart = cartList.value.some(item => item.id === productId);
-
-  if (isAlreadyInCart) {
-    toast.error("Product already in cart", {
-      position: "bottom-right",
-      hideProgressBar: true,
-      closeButton: false,
-      icon: false,
-      timeout: 1500
-    });
-    return;
-  }
-
-  if (cartProduct) {
-    cartList.value.push({
-      id: cartProduct.id,
-      image: cartProduct.image,
-      title: cartProduct.title,
-      description: cartProduct.description,
-      item_status: cartProduct.item_status,
-      discount: cartProduct.discount,
-      price: cartProduct.price,
-      remaining_in_stock: cartProduct.remaining_in_stock,
-      quantity: cartProduct.quantity ?? 1,
-    });
-
-    const productName = cartProduct.title;
-
-    toast(`${productName} Added to your cart`, {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 1500
-    });
-  } else {
-    toast.error("FAILED! to add product", {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 3000
-      });
-  }
-};
-
-
-// WHEN NO PRODUCT EXIST
-const noWishlist = computed(() => wishlist.value.length === 0);
-const noCart = computed(() => cartList.value.length === 0);
-
-const noContent = computed(() => option3.value.length === 0 || setting.value.length === 0);
+    // WHEN NO PRODUCT EXIST
+    const noWishlist = computed(() => wishlist.value.length === 0);
+    const noCart = computed(() => cartList.value.length === 0);
+    const noContent = computed(() => option3.value.length === 0 || setting.value.length === 0);
 </script>
+
 <template>
     <v-container class="ItemContainer">
         <v-card>
@@ -130,8 +64,9 @@ const noContent = computed(() => option3.value.length === 0 || setting.value.len
                     :value="item.title"
                     :class="{ 'active-tab': tab === item.title }">
                     <v-badge v-if="item.title === 'WISHLIST' || item.title === 'CART'" 
-                    color="#FE5253" :content="item.title === 'WISHLIST' ? wishlist.length : 
-                                              item.title === 'CART' ? cartList.length : ''">
+                    color="#FE5253" 
+                    :content="item.title === 'WISHLIST' ? wishlist.length :
+                    item.title === 'CART' ? cartList.length : ''">
                         {{ item.title }}
                     </v-badge>
                     <template v-else>
@@ -215,7 +150,7 @@ const noContent = computed(() => option3.value.length === 0 || setting.value.len
     .v-card {
         border-radius: 0;
     }
-    
+
     .v-tabs-window {
         background-color: #191919;
         color: white;
@@ -261,7 +196,7 @@ const noContent = computed(() => option3.value.length === 0 || setting.value.len
         top: 0;
         z-index: 100;
         background: white;
-        // box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        // box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .active-tab {

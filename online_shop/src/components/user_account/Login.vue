@@ -1,5 +1,4 @@
 <script setup>
-  import { ref } from 'vue'
   import { useField, useForm } from 'vee-validate'
 
   const { handleSubmit, handleReset } = useForm({
@@ -31,8 +30,7 @@
         <v-col cols="12" md="6">
           <v-dialog
             transition="dialog-bottom-transition"
-            width="auto"
-          >
+            width="auto">
             <template v-slot:activator="{ props: activatorProps }">
               <v-btn
                 v-bind="activatorProps"
@@ -40,7 +38,7 @@
                 block
                 class="bg-black text-white btn"></v-btn>
             </template>
-  
+
             <template v-slot:default="{ isActive }">
               <v-card>
                 <form @submit.prevent="submit" class="formLogin">
@@ -64,7 +62,7 @@
                         type="submit">
                         submit
                         </v-btn>
-    
+
                         <v-btn @click="handleReset">
                         clear
                         </v-btn>
@@ -74,7 +72,7 @@
             </template>
           </v-dialog>
         </v-col>
-  
+
         <v-col cols="12" md="6">
           <v-dialog
             transition="dialog-top-transition"

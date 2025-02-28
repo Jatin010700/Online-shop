@@ -2,10 +2,9 @@
 import { computed, onMounted, provide, ref, watch } from 'vue';
 import axios from "axios";
 import Search_Filter from './Search_Filter.vue';
-import TabSpeedDial from './TabSpeedDial.vue';
+import SpeedDial from './SpeedDial.vue';
 import Footer from '../homepage/Footer.vue'
 import { useWishListStore } from '../../store_state/wishlistState';
-import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { useCartStore } from '../../store_state/cartState';
 
@@ -15,12 +14,11 @@ provide('products', allProducts);
 
 const searchQuery = ref("");
 const selectedFilters = ref([]);
-
-const productId = ref([]);
-
 const loading = ref(true);
 const itemsToShow = ref(8);
 const toast = useToast();
+const storeCart = useCartStore();
+const storeWishlist = useWishListStore();
 
 // PRODUCT API
 onMounted(async () => {
@@ -28,12 +26,12 @@ onMounted(async () => {
       const res = await axios.get("http://localhost:5000/products");
       allProducts.value = res.data.store;
       store.value = res.data.store.slice(0, itemsToShow.value);
-      productId.value = allProducts.value.findIndex(product => product.id);
       setTimeout(() => {
         loading.value = false;
       }, 3000);
     } catch (err) {
       console.error(err);
+      toast.error("SERVER ERROR");
     }
   });
 
@@ -66,7 +64,7 @@ const filteredProducts = computed(() => {
       item.title.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
   }
-  
+
   return filtered.slice(0, itemsToShow.value);
 });
 
@@ -78,107 +76,13 @@ watch(searchQuery, () => {
 });
 
 // WISHLIST
-const storeWishlist = useWishListStore();
-const { wishlist } = storeToRefs(storeWishlist);
-
 const addItemToWishList = (productId) => {
-  const wishListProduct = allProducts.value.find(product => product.id === productId);
-  const isAlreadyInWishlist = wishlist.value.some(item => item.id === productId);
-
-  if (isAlreadyInWishlist) {
-    toast.error("Product already in wishlist", {
-      position: "bottom-right",
-      hideProgressBar: true,
-      closeButton: false,
-      icon: false,
-      timeout: 1500
-    });
-    return;
-  }
-
-  if (wishListProduct) {
-    wishlist.value.push({
-      id: wishListProduct.id,
-      image: wishListProduct.image,
-      title: wishListProduct.title,
-      description: wishListProduct.description,
-      item_status: wishListProduct.item_status,
-      discount: wishListProduct.discount,
-      price: wishListProduct.price,
-      remaining_in_stock: wishListProduct.remaining_in_stock,
-      quantity: wishlist.quantity ?? 1,
-    });
-
-    const productName = wishListProduct.title; 
-
-    toast(`${productName} Added to your wishlist`, {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 1500
-    });
-  } else {
-    toast.error("FAILED! to add product", {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 3000
-      });
-  }
+  storeWishlist.addItemToWishList(productId, allProducts);
 };
 
 // CART
-const storeCart = useCartStore();
-const { cartList } = storeToRefs(storeCart);
-
 const addItemToCart = (productId) => {
-  const cartProduct = allProducts.value.find(product => product.id === productId);
-  const isAlreadyInCart = cartList.value.some(item => item.id === productId);
-
-  if (isAlreadyInCart) {
-    toast.error("Product already in cart", {
-      position: "bottom-right",
-      hideProgressBar: true,
-      closeButton: false,
-      icon: false,
-      timeout: 1500
-    });
-    return;
-  }
-
-  if (cartProduct) {
-    cartList.value.push({
-      id: cartProduct.id,
-      image: cartProduct.image,
-      title: cartProduct.title,
-      description: cartProduct.description,
-      item_status: cartProduct.item_status,
-      discount: cartProduct.discount,
-      price: cartProduct.price,
-      remaining_in_stock: cartProduct.remaining_in_stock,
-      quantity: cartProduct.quantity ?? 1,
-    });
-
-    const productName = cartProduct.title;
-
-    toast(`${productName} Added to your cart`, {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 1500
-    });
-  } else {
-    toast.error("FAILED! to add product", {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 3000
-      });
-  }
+  storeCart.addItemToCart(productId, allProducts);
 };
 
 // WHEN NO PRODUCT EXIST
@@ -216,7 +120,7 @@ const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProd
             ${{ item.discount ? (item.price * (1 - item.discount / 100)).toFixed(2) : item.price || "No Discount" }}
           </p>
         </div>
-        <TabSpeedDial 
+        <SpeedDial 
           :clickWishList="() => addItemToWishList(item.id)" 
           :clickCart="() => addItemToCart(item.id)"
         />

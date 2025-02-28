@@ -43,6 +43,10 @@ createApp(App)
 .use(MasonryWall)
 .use(Toast, {
   toastClassName: "customToast",
+  position: "bottom-right",
+  hideProgressBar: true,
+  closeButton: false,
+  icon: false,
   filterBeforeCreate: (toast, toasts) => {
     if (toasts.filter(
       t => t.type === toast.type

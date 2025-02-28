@@ -29,7 +29,7 @@ const account = ref([
 ]);
 
 watchEffect(() => {
-  account.value[0].value = wishlist.value.length > 0; 
+  account.value[0].value = wishlist.value.length > 0;
   account.value[1].value = cartList.value.length > 0;
 });
 
@@ -44,7 +44,7 @@ const isActive = (to) => route.path === to;
                         <v-list-item title="Home" prepend-icon="mdi-home" ></v-list-item>
                     </router-link>
                 </v-btn>
-                <v-menu 
+                <v-menu
                 transition="slide-x-transition"
                 open-on-hover
                 location="end">
@@ -94,13 +94,13 @@ const isActive = (to) => route.path === to;
                         </v-list-item>
                     </v-list>
                 </v-menu>
-                
+
                 <v-btn variant="text" :class="{ 'active-link': isActive('/CheckOut'), 'inactive-link': !isActive('/CheckOut') }">
                     <router-link to="/CheckOut" class="link">
                         <v-list-item title="Cart" prepend-icon="mdi-cart"></v-list-item>
                     </router-link>
                 </v-btn>
-                
+
                 <v-btn variant="text" class="logOutBtn">
                     <v-icon icon="mdi-power"></v-icon>
                 </v-btn>

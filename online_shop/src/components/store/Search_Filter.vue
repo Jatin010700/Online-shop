@@ -4,29 +4,28 @@ import Navbar from '../navigation/navbar.vue';
 import { useToast } from "vue-toastification";
 
 const dialog = ref(false);
-const slider = ref(0);
-const slider2 = ref(0);
+const slider = ref([25, 75]);
+const slider2 = ref([250, 750]);
 const max2 = ref(1000);
+// amentities is for chips group
 const amenities = ref([]);
 const toast = useToast();
 
-const sliderPriceDecimal = (sliderRef) => computed({
-  get: () => Number(sliderRef.value).toFixed(2),
-  set: (value) => {
-    sliderRef.value = parseFloat(value);
-  },
-});
-
-const sliderPrice1 = sliderPriceDecimal(slider);
-const sliderPrice2 = sliderPriceDecimal(slider2);
-
-// FILTER
 const props = defineProps(["searchQuery", "selectedFilters"]);
 const emit = defineEmits(["update:searchQuery", "update:selectedFilters"]);
 
 // REMINDER: provide and inject to manage to state across component
 // GET all prodcut from store component
 const products = inject('products');
+
+const sliderPriceDecimal = (sliderRef) => computed({
+  get: () => sliderRef.value.map(num => Number(num).toFixed(2)),
+  set: (values) => {
+    sliderRef.value = values.map(value => parseFloat(value));
+  },
+});
+const sliderPrice1 = sliderPriceDecimal(slider);
+const sliderPrice2 = sliderPriceDecimal(slider2);
 
 // FILTER discount from product
 const discounts = products.value
@@ -59,27 +58,27 @@ const items = ref([
 ]);
 
 const lists = ref([
-  { text: 'GAMES' },
-  { text: 'COMPUTED' },
-  { text: 'TELEVISION' },
-  { text: 'ACCESSORIES' },
-  { text: 'GADJETS' },
-  { text: 'PC PARTS' },
-  { text: 'ITEM 4' },
-  { text: 'ITEM 5' },
-  { text: 'ITEM 6' },
-  { text: 'ITEM 7' },
-  { text: 'ITEM 8' },
-  { text: 'ITEM 9' },
-  { text: 'ITEM 10' },
-  { text: 'ITEM 11' },
-  { text: 'ITEM 12' },
-  { text: 'ITEM 13' },
-  { text: 'ITEM 14' },
-  { text: 'ITEM 15' },
-  { text: 'ITEM 16' },
-  { text: 'ITEM 17' },
-  { text: 'ITEM 18' },
+  { text: 'GAMES', value: false },
+  { text: 'LIMITED', value: limited.length > 0 ? limited : false },
+  { text: 'TELEVISION', value: false },
+  { text: 'ACCESSORIES', value: false },
+  { text: 'GADJETS', value: false },
+  { text: 'PC PARTS', value: false },
+  { text: 'ITEM 4', value: false },
+  { text: 'ITEM 5', value: false },
+  { text: 'ITEM 6', value: false },
+  { text: 'ITEM 7', value: false },
+  { text: 'ITEM 8', value: false },
+  { text: 'ITEM 9', value: false },
+  { text: 'ITEM 10', value: false },
+  { text: 'ITEM 11', value: false },
+  { text: 'ITEM 12', value: false },
+  { text: 'ITEM 13', value: false },
+  { text: 'ITEM 14', value: false },
+  { text: 'ITEM 15', value: false },
+  { text: 'ITEM 16', value: false },
+  { text: 'ITEM 17', value: false },
+  { text: 'ITEM 18', value: false },
 ]);
 
 // SAVE BUTTON
@@ -87,16 +86,14 @@ const handleSave = (e) => {
   e.preventDefault();
 
   // Filter selected filters where value is true (checkbox is checked)
-  const selectedFilters = items.value.filter(item => item.value).map(item => item.title);
+  const selectedFilters = [
+    ...items.value.filter(item => item.value).map(item => item.title),
+    ...amenities.value
+  ];
+
   // Check if no filters are selected
   if (selectedFilters.length === 0) {
-      toast.error("Please select at least one option before saving", {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 3000
-      });
+      toast.error("Please select at least one option before saving", { timeout: 3000 });
   } else {
     // Emit the selected filters if any checkbox is checked
     emit("update:selectedFilters", selectedFilters);
@@ -199,20 +196,18 @@ const clearSearch = () => {
             </v-list>
 
             <div class="wrapSlider">
-              <v-slider
+              <v-range-slider
                 v-model="slider"
                 class="align-center"
                 hide-details
                 thumb-color="#191919"
                 color="#191919"
-                thumb-label
-              >
+                thumb-label>
                 <template v-slot:append>
-                  <span style="width: 70px; text-align: center;">{{ sliderPrice1 }}</span>
+                  <span style="width: 78px; text-align: center;">{{ sliderPrice1[0] }} - {{ sliderPrice1[1] }}</span>
                 </template>
-              </v-slider>
-                
-              <v-slider
+              </v-range-slider>
+              <v-range-slider
                   v-model="slider2"
                   :max="max2"
                   class="align-center"
@@ -221,9 +216,9 @@ const clearSearch = () => {
                   color="#191919"
                   thumb-label>
                   <template v-slot:append>
-                    <span style="width: 70px; text-align: center;">{{ sliderPrice2 }}</span>
-                </template>
-              </v-slider>
+                    <span style="width: 100%; text-align: center;">{{ sliderPrice2[0] }} - {{ sliderPrice2[1] }}</span>
+                  </template>
+              </v-range-slider>
             </div>
           </div>
 
@@ -245,10 +240,10 @@ const clearSearch = () => {
     </v-dialog>
   </div>
 
-      <Navbar propNavbarContainer="classPropNavContainer"/>
-      </div>
-    </v-container>
-  </template>
+    <Navbar propNavbarContainer="classPropNavContainer"/>
+    </div>
+  </v-container>
+</template>
 
 <style lang="scss" scoped>
 .searchContainer {
@@ -260,7 +255,7 @@ const clearSearch = () => {
         display: flex;
         align-items: center;
         gap: 20px;
-        
+
         :deep(.v-field) {
             border-radius: 0!important;
             font-size: 24px;
@@ -298,7 +293,7 @@ const clearSearch = () => {
 
 .v-toolbar {
   background-color: white;
-  
+
   .v-btn,
   .v-toolbar-title {
     font-size: 24px;
@@ -359,5 +354,9 @@ const clearSearch = () => {
   .wrapSlider {
     width: 70%;
   }
+}
+
+:deep(.v-slider > .v-input__append) {
+  margin: 0 20px;
 }
 </style>

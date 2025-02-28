@@ -7,12 +7,12 @@ import Checkout from '../components/checkout/Checkout.vue';
 
 // CHECK VUE ROUTE FOR PROTECTED ROUTES
 const routes = [
-  { 
+  {
     path: '/',
     name: 'Home',
     component: HomePage,
    },
-  { 
+  {
     path: '/Store',
     name: 'Store',
     component: Store,

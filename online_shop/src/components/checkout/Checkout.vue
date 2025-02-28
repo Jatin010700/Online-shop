@@ -11,33 +11,31 @@ const steps = ref(1);
 const stepsNumber = ref(3);
 const stepsTitle = ["Review Order", "Select Shipping", "Confirm Order"];
 const shipping = ref(10);
-
+const selectedShipping = ref(null);
 
 const totalPrice = computed(() => {
-    if (!cartList.value || !Array.isArray(cartList.value)) return "0.00";
-    
-    return cartList.value.reduce((total, item) => {
-      const discountedPrice = item.discount 
-          ? item.price * (1 - item.discount / 100) 
-          : item.price;
-          return total + discountedPrice * item.quantity;
-        }, 0).toFixed(2);
-      });
+  if (!cartList.value || !Array.isArray(cartList.value)) return "0.00";
 
-  const increaseQty = (productId) => {
-    getCart.increaseQty(productId);
-  };
+  return cartList.value.reduce((total, item) => {
+    const discountedPrice = item.discount 
+        ? item.price * (1 - item.discount / 100) 
+        : item.price;
+        return total + discountedPrice * item.quantity;
+      }, 0).toFixed(2);
+});
 
-  const decreaseQty = (productId) => {
-    getCart.decreaseQty(productId);
-  };
+const increaseQty = (productId) => {
+  getCart.increaseQty(productId);
+};
 
-  const noCart = computed(() => cartList.value.length === 0);
-  const disabled = computed(() => steps.value === 1 ? "prev" : steps.value === stepsNumber.value ? "next" : undefined);
-  const currentStepTitle = computed(() => stepsTitle[steps.value - 1] || "");
-  const total = computed(() => (parseFloat(totalPrice.value) + parseFloat(shipping.value)).toFixed(2));
+const decreaseQty = (productId) => {
+  getCart.decreaseQty(productId);
+};
 
-  const selectedShipping = ref(null);
+const noCart = computed(() => cartList.value.length === 0);
+const disabled = computed(() => steps.value === 1 ? "prev" : steps.value === stepsNumber.value ? "next" : undefined);
+const currentStepTitle = computed(() => stepsTitle[steps.value - 1] || "");
+const total = computed(() => (parseFloat(totalPrice.value) + parseFloat(shipping.value)).toFixed(2));
 
 const validateStep = (step) => {
   if (step === 1) {
@@ -55,9 +53,9 @@ const next = () => {
   }
 };
 
-  const prev = () => {
-    if (steps.value > 1) steps.value--;
-  };
+const prev = () => {
+  if (steps.value > 1) steps.value--;
+};
 </script>
 
 <template>
@@ -234,7 +232,7 @@ const next = () => {
     :deep(.v-stepper-header) {
         box-shadow: none;
     }
-    
+
     :deep(.v-stepper-item__avatar.v-avatar) {
         border-radius: 0;
         background-color: #191919;
@@ -321,5 +319,23 @@ const next = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+:deep(.v-stepper-item__avatar) {
+  margin-bottom: 5px!important;
+  width: 35px!important;
+  height: 35px!important;
+
+  .v-icon {
+    font-size: 1.5rem!important;
+  }
+}
+
+.v-divider {
+  margin: 42px -67px 0!important;
+}
+
+.v-stepper-item {
+  flex-basis: 200px!important;
 }
 </style>

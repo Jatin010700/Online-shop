@@ -1,130 +1,39 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import axios from "axios";
-import TabSpeedDial from '../store/TabSpeedDial.vue';
+import SpeedDial from '../store/SpeedDial.vue';
 import { useWishListStore } from '../../store_state/wishlistState';
-import { storeToRefs } from 'pinia';
 import { useToast } from 'vue-toastification';
 import { useCartStore } from '../../store_state/cartState';
 
-const products = ref([]);
+const allProducts = ref([]);
 const tab = ref(null);
 const loading = ref(true);
 const toast = useToast();
+const storeCart = useCartStore();
+const storeWishlist = useWishListStore();
 
 onMounted(async () => {
     try {
         const res = await axios.get("http://localhost:5000/products");
-        products.value = res.data.products;
+        allProducts.value = res.data.products;
         setTimeout(() => {
             loading.value = false;
         }, 3000);
     } catch (err) {
         console.error(err);
+        toast.error("SERVER ERROR");
     }
 });
 
-    // WISHLIST
-const storeWishlist = useWishListStore();
-const { wishlist } = storeToRefs(storeWishlist);
-
+// WISHLIST
 const addItemToWishList = (productId) => {
-  const wishListProduct = products.value.find(product => product.id === productId);
-  const isAlreadyInWishlist = wishlist.value.some(item => item.id === productId);
-  console.log("Product found in wishlist:", wishListProduct);
-  if (isAlreadyInWishlist) {
-    toast.error("Product already in wishlist", {
-      position: "bottom-right",
-      hideProgressBar: true,
-      closeButton: false,
-      icon: false,
-      timeout: 1500
-    });
-    return;
-  }
-
-  if (wishListProduct) {
-    wishlist.value.push({
-      id: wishListProduct.id,
-      image: wishListProduct.image,
-      title: wishListProduct.title,
-      item_status: wishListProduct.item_status,
-      discount: wishListProduct.discount,
-      price: wishListProduct.price,
-      remaining_in_stock: wishListProduct.remaining_in_stock,
-      quantity: wishlist.quantity ?? 1,
-    });
-
-    const productName = wishListProduct.title;
-
-    toast(`${productName} Added to your wishlist`, {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 1500
-    });
-  } else {
-    toast.error("FAILED! to add product", {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 3000
-      });
-  }
+  storeWishlist.addItemToWishList(productId, allProducts);
 };
 
 // CART
-const storeCart = useCartStore();
-const { cartList } = storeToRefs(storeCart);
-
 const addItemToCart = (productId) => {
-  const cartProduct = products.value.find(product => product.id === productId);
-  const isAlreadyInCart = cartList.value.some(item => item.id === productId);
-  console.log("Product found in wishlist:", cartProduct);
-  if (isAlreadyInCart) {
-    toast.error("Product already in cart", {
-      position: "bottom-right",
-      hideProgressBar: true,
-      closeButton: false,
-      icon: false,
-      timeout: 1500
-    });
-    return;
-  }
-
-  if (cartProduct) {
-    cartList.value.push({
-      id: cartProduct.id,
-      image: cartProduct.image,
-      title: cartProduct.title,
-      description: cartProduct.description,
-      item_status: cartProduct.item_status,
-      discount: cartProduct.discount,
-      price: cartProduct.price,
-      remaining_in_stock: cartProduct.remaining_in_stock,
-      quantity: cartProduct.quantity ?? 1,
-    });
-
-    const productName = cartProduct.title;
-
-    toast(`${productName} Added to your cart`, {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 1500
-    });
-  } else {
-    toast.error("FAILED! to add product", {
-        position: "bottom-right",
-        hideProgressBar: true,
-        closeButton: false,
-        icon: false,
-        timeout: 3000
-      });
-  }
+  storeCart.addItemToCart(productId, allProducts);
 };
 </script>
 
@@ -149,7 +58,7 @@ const addItemToCart = (productId) => {
                     <v-tabs-window v-model="tab">
                     <v-tabs-window-item value="one" class="wrapContent">
                     <v-card
-                        v-for="(product, i) in products.slice(0, 4)" :key="i"
+                        v-for="(product, i) in allProducts.slice(0, 4)" :key="i"
                         class="tabCard"
                         max-width="344"
                         link>
@@ -158,17 +67,17 @@ const addItemToCart = (productId) => {
                             <p v-if="!loading" class="item-status">{{ product.item_status }}</p>
                             <v-card-title v-if="!loading" class="title">{{ product.title }}</v-card-title>
                             <v-card-subtitle v-if="!loading" class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                            <TabSpeedDial
+                            <SpeedDial
                                 v-if="!loading"
                                 :clickWishList="() => addItemToWishList(product.id)"
                                 :clickCart="() => addItemToCart(product.id)" 
                             />
                     </v-card>
                     </v-tabs-window-item>
-            
+
                     <v-tabs-window-item value="two"  class="wrapContent">
                         <v-card
-                            v-for="(product, i) in products.slice(4, 8)" :key="i"
+                            v-for="(product, i) in allProducts.slice(4, 8)" :key="i"
                             class="tabCard"
                             max-width="344"
                             link>
@@ -181,7 +90,7 @@ const addItemToCart = (productId) => {
                                 ${{ product.discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price || "No Discount" }}
                             </v-card-subtitle>
                         </div>
-                        <TabSpeedDial 
+                        <SpeedDial 
                             :clickWishList="() => addItemToWishList(product.id)"
                             :clickCart="() => addItemToCart(product.id)" 
                         />
@@ -190,7 +99,7 @@ const addItemToCart = (productId) => {
             
                     <v-tabs-window-item value="three"  class="wrapContent">
                         <v-card
-                            v-for="(product, i) in products.slice(8, 12)" :key="i"
+                            v-for="(product, i) in allProducts.slice(8, 12)" :key="i"
                             class="tabCard"
                             max-width="344"
                             link>
@@ -199,7 +108,7 @@ const addItemToCart = (productId) => {
                         <p class="item-stock">IN STOCK: {{ product.remaining_in_stock }}</p>
                         <v-card-title class="title">{{ product.title }}</v-card-title>
                         <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                        <TabSpeedDial 
+                        <SpeedDial 
                             :clickWishList="() => addItemToWishList(product.id)"
                             :clickCart="() => addItemToCart(product.id)" 
                         />

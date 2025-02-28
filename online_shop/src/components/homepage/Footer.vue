@@ -1,27 +1,23 @@
 <script setup>
+  import { ref } from 'vue';
+  defineProps({ propFooterSub: String });
 
-defineProps({ propFooterSub: String });
+  const links = ref([
+    'About Us',
+    'Team',
+    'Services',
+    'Blog',
+    'Contact Us',
+  ]);
+
+  const icons = ref([
+    'mdi-facebook',
+    'mdi-twitter',
+    'mdi-linkedin',
+    'mdi-instagram',
+  ]);
 </script>
 
-<script>
-  export default {
-    data: () => ({
-      links: [
-        'About Us',
-        'Team',
-        'Services',
-        'Blog',
-        'Contact Us',
-      ],
-      icons: [
-        'mdi-facebook',
-        'mdi-twitter',
-        'mdi-linkedin',
-        'mdi-instagram',
-      ],
-    }),
-  }
-</script>
 <template>
     <v-app :class="['footerSub', propFooterSub]">
         <v-footer class="bg-black text-white">

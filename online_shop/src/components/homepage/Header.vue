@@ -20,12 +20,11 @@ defineProps({
       </p>
     </div>
     <div class="wrapImg1">
-      <img src="/headset.webp" class="" alt="" width="500px" height="100%"/>
+      <img src="/headset.webp" alt="" width="500px" height="100%"/>
       <p class="discount">-50%</p>
       <p class="imgName">Headset scarlet version 2.58</p>
     </div>
   </div>
-  
 
   <div class="headerSub2"><div class="headerText2">
     <h1>{{ msg }}</h1>
@@ -36,7 +35,7 @@ defineProps({
       vero sint recusandae cum tempora nemo commodi soluta deleniti.
     </p>
   </div>
-    <img src="/laptop.webp" class="" alt="" width="500px" height="670px"/>
+    <img src="/laptop.webp" alt="" width="500px" height="670px"/>
     <p class="imgName">Laptop Asus version 1.538</p>
   </div>
 </div>
@@ -77,12 +76,12 @@ h1 {
       .discount {
         position: absolute;
         top: -15px;
-        right: -15px;
+        right: -25px;
         background-color: white;
         color: black;
         font-size: 20px;
         padding: 5px 10px;
-    }
+      }
 
       .imgName {
         position: absolute;
@@ -92,7 +91,7 @@ h1 {
       }
     }
   }
-  
+
   .headerSub2 {
     position: relative;
 
@@ -114,5 +113,4 @@ h1 {
     }
   }
 }
-
 </style>
