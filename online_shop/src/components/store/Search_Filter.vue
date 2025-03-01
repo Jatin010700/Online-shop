@@ -1,121 +1,137 @@
 <script setup>
-import { ref, computed, inject } from 'vue';
-import Navbar from '../navigation/navbar.vue';
-import { useToast } from "vue-toastification";
+  import { ref, computed, inject } from 'vue';
+  import Navbar from '../navigation/navbar.vue';
+  import { useToast } from "vue-toastification";
 
-const dialog = ref(false);
-const slider = ref([25, 75]);
-const slider2 = ref([250, 750]);
-const max2 = ref(1000);
-// amentities is for chips group
-const amenities = ref([]);
-const toast = useToast();
+  const dialog = ref(false);
+  const slider = ref([0, 0]);
+  const slider2 = ref([0, 0]);
+  // amentities is for chips group
+  const amenities = ref([]);
+  const toast = useToast();
 
-const props = defineProps(["searchQuery", "selectedFilters"]);
-const emit = defineEmits(["update:searchQuery", "update:selectedFilters"]);
+  const props = defineProps(["searchQuery", "selectedFilters"]);
+  const emit = defineEmits(["update:searchQuery", "update:selectedFilters"]);
 
-// REMINDER: provide and inject to manage to state across component
-// GET all prodcut from store component
-const products = inject('products');
+  // REMINDER: provide and inject to manage to state across component
+  // GET all prodcut from store component
+  const products = inject('products');
 
-const sliderPriceDecimal = (sliderRef) => computed({
-  get: () => sliderRef.value.map(num => Number(num).toFixed(2)),
-  set: (values) => {
-    sliderRef.value = values.map(value => parseFloat(value));
-  },
-});
-const sliderPrice1 = sliderPriceDecimal(slider);
-const sliderPrice2 = sliderPriceDecimal(slider2);
-
-// FILTER discount from product
-const discounts = products.value
-  .filter(product => product.discount !== null)
-  .map(product => product.discount);
-
-// FILTER item_status with LIMITED from product
-const limited = products.value
-  .filter(product => product.item_status === "LIMITED")
-  .map(product => product.item_status);
-
-// FILTER item_status with NEW ITEM from product
-const newItem = products.value
-  .filter(product => product.item_status === "NEW")
-  .map(product => product.item_status);
-
-  // SLIDER PRICE NEED TO ADD
-  const pricelessthen100 = products.value
-  .filter(product => product.price < 100)
-  .map(product => product.price);
-
-// FILTER CHECKBOX
-const items = ref([
-  { title: 'NEW ITEMS', value: newItem.length > 0 ? newItem : false },
-  { title: 'DISCOUNT', value: discounts.length > 0 ? discounts : false },
-  { title: 'LIMITED', value: limited.length > 0 ? limited : false },
-  { title: 'ITEM 4', value: false },
-  { title: 'ITEM 5', value: false },
-  { title: 'ITEM 6', value: false },
-]);
-
-const lists = ref([
-  { text: 'GAMES', value: false },
-  { text: 'LIMITED', value: limited.length > 0 ? limited : false },
-  { text: 'TELEVISION', value: false },
-  { text: 'ACCESSORIES', value: false },
-  { text: 'GADJETS', value: false },
-  { text: 'PC PARTS', value: false },
-  { text: 'ITEM 4', value: false },
-  { text: 'ITEM 5', value: false },
-  { text: 'ITEM 6', value: false },
-  { text: 'ITEM 7', value: false },
-  { text: 'ITEM 8', value: false },
-  { text: 'ITEM 9', value: false },
-  { text: 'ITEM 10', value: false },
-  { text: 'ITEM 11', value: false },
-  { text: 'ITEM 12', value: false },
-  { text: 'ITEM 13', value: false },
-  { text: 'ITEM 14', value: false },
-  { text: 'ITEM 15', value: false },
-  { text: 'ITEM 16', value: false },
-  { text: 'ITEM 17', value: false },
-  { text: 'ITEM 18', value: false },
-]);
-
-// SAVE BUTTON
-const handleSave = (e) => {
-  e.preventDefault();
-
-  // Filter selected filters where value is true (checkbox is checked)
-  const selectedFilters = [
-    ...items.value.filter(item => item.value).map(item => item.title),
-    ...amenities.value
-  ];
-
-  // Check if no filters are selected
-  if (selectedFilters.length === 0) {
-      toast.error("Please select at least one option before saving", { timeout: 3000 });
-  } else {
-    // Emit the selected filters if any checkbox is checked
-    emit("update:selectedFilters", selectedFilters);
-    dialog.value = false;
-  }
-};
-
-// RESET CHECKBOX
-const handleReset = () => {
-  // Reset all items to false (unchecked)
-  items.value.forEach(item => {
-    item.value = false;
+  const sliderPriceDecimal = (sliderRef) => computed({
+    get: () => sliderRef.value.map(num => Number(num).toFixed(2)),
+    set: (values) => {
+      sliderRef.value = values.map(value => parseFloat(value));
+    },
   });
 
-  // Emit the reset state (empty array)
-  emit("update:selectedFilters", []);
-  dialog.value = false;
-};
+  const sliderPrice1 = sliderPriceDecimal(slider);
+  const sliderPrice2 = sliderPriceDecimal(slider2);
 
-const clearSearch = () => {
-  emit('update:searchQuery', '');
-};
+  // FILTER discount from product
+  const discounts = products.value
+    .filter(product => product.discount !== null)
+    .map(product => product.discount);
+
+  // FILTER item_status with LIMITED from product
+  const limited = products.value
+    .filter(product => product.item_status === "LIMITED")
+    .map(product => product.item_status);
+
+  // FILTER item_status with NEW ITEM from product
+  const newItem = products.value
+    .filter(product => product.item_status === "NEW")
+    .map(product => product.item_status);
+
+  // FILTER CHECKBOX
+  const items = ref([
+    { title: 'NEW ITEMS', value: newItem.length > 0 ? newItem : false },
+    { title: 'DISCOUNT', value: discounts.length > 0 ? discounts : false },
+    { title: 'LIMITED', value: limited.length > 0 ? limited : false },
+    { title: 'ITEM 4', value: false },
+    { title: 'ITEM 5', value: false },
+    { title: 'ITEM 6', value: false },
+  ]);
+
+  // FILTER CHIPS
+  const lists = ref([
+    { text: 'GAMES', value: false },
+    { text: 'LIMITED', value: limited.length > 0 ? limited : false },
+    { text: 'TELEVISION', value: false },
+    { text: 'ACCESSORIES', value: false },
+    { text: 'GADJETS', value: false },
+    { text: 'PC PARTS', value: false },
+    { text: 'ITEM 4', value: false },
+    { text: 'ITEM 5', value: false },
+    { text: 'ITEM 6', value: false },
+    { text: 'ITEM 7', value: false },
+    { text: 'ITEM 8', value: false },
+    { text: 'ITEM 9', value: false },
+    { text: 'ITEM 10', value: false },
+    { text: 'ITEM 11', value: false },
+    { text: 'ITEM 12', value: false },
+    { text: 'ITEM 13', value: false },
+    { text: 'ITEM 14', value: false },
+    { text: 'ITEM 15', value: false },
+    { text: 'ITEM 16', value: false },
+    { text: 'ITEM 17', value: false },
+    { text: 'ITEM 18', value: false },
+  ]);
+
+  // ERROR NOT WOKRING DUR PRICE SLIDER
+  // const priceRange = computed(() => {
+  //   return [sliderPrice1.value[0], sliderPrice1.value[1]];
+  // });
+  // const priceRange2 = computed(() => {
+  //   return [sliderPrice2.value[0], sliderPrice2.value[1]];
+  // });
+
+  // SAVE BUTTON
+  const handleSave = (e) => {
+    e.preventDefault();
+
+    // Filter selected filters where value is true (checkbox is checked)
+    const selectedFilters = [
+      ...items.value.filter(item => item.value).map(item => item.title),
+      ...amenities.value,
+      // ERROR NOT WOKRING DUR PRICE SLIDER
+      // ...priceRange.value.length ? [priceRange.value] : [],
+      // ...priceRange2.value.length ? [priceRange2.value] : []
+      // { priceRange: [sliderPrice1.value[0], sliderPrice1.value[1]] },
+      // { priceRange2: [sliderPrice2.value[0], sliderPrice2.value[1]] }
+    ];
+
+    // Check if no filters are selected
+    if (selectedFilters.length === 0) {
+        toast.error("Please select at least one option before saving", { timeout: 3000 });
+    } else {
+      // Emit the selected filters if any checkbox is checked
+      emit("update:selectedFilters", selectedFilters);
+      dialog.value = false;
+    }
+  };
+
+  // RESET CHECKBOX
+  const handleReset = () => {
+    // Reset all items to false (unchecked)
+    items.value.forEach(item => {
+      item.value = false;
+    });
+
+    //Reset chip group
+    amenities.value = [];
+
+    //Reset slider
+    slider.value = [0, 0];
+    slider2.value = [0, 0];
+
+    // Emit the reset state (empty array)
+    emit("update:selectedFilters", []);
+    dialog.value = false;
+  };
+
+  const clearSearch = () => {
+    emit('update:searchQuery', '');
+  };
 </script>
 
 <template>
@@ -204,19 +220,18 @@ const clearSearch = () => {
                 color="#191919"
                 thumb-label>
                 <template v-slot:append>
-                  <span style="width: 78px; text-align: center;">{{ sliderPrice1[0] }} - {{ sliderPrice1[1] }}</span>
+                  <span style="width: 100px; text-align: center;">{{ sliderPrice1[0] }} - {{ sliderPrice1[1] }}</span>
                 </template>
               </v-range-slider>
               <v-range-slider
                   v-model="slider2"
-                  :max="max2"
                   class="align-center"
                   hide-details
                   thumb-color="#191919"
                   color="#191919"
                   thumb-label>
                   <template v-slot:append>
-                    <span style="width: 100%; text-align: center;">{{ sliderPrice2[0] }} - {{ sliderPrice2[1] }}</span>
+                    <span style="width: 100px; text-align: center;">{{ sliderPrice2[0] }} - {{ sliderPrice2[1] }}</span>
                   </template>
               </v-range-slider>
             </div>

@@ -46,6 +46,11 @@ const filteredProducts = computed(() => {
   let filtered = allProducts.value;
 
   // CHECK IF SelectedFilters have DISCOUNT, LIMITED, NEW ITEMS
+  
+  // ERROR NOT WOKRING DUR PRICE SLIDER
+  // const priceFilter = selectedFilters.value.find(filter => filter?.priceRange);
+  // const priceFilter2 = selectedFilters.value.find(filter => filter?.priceRange2);
+  
   const hasDiscountFilter = selectedFilters.value.includes("DISCOUNT");
   const hasLimitedFilter = selectedFilters.value.includes("LIMITED");
   const hasNewItemFilter = selectedFilters.value.includes("NEW ITEMS");
@@ -57,6 +62,17 @@ const filteredProducts = computed(() => {
       (hasNewItemFilter && item.item_status === "NEW")
     );
   }
+
+  // ERROR NOT WOKRING DUR PRICE SLIDER
+  // if (priceFilter || priceFilter2) {
+  //   filtered = filtered.filter(item => {
+  //     const finalPrice = item.discount ? (item.price * (1 - item.discount / 100)) : item.price;
+  //     const inRange1 = priceFilter ? (finalPrice >= priceFilter.priceRange[0] && finalPrice <= priceFilter.priceRange[1]) : false;
+  //     const inRange2 = priceFilter2 ? (finalPrice >= priceFilter2.priceRange2[0] && finalPrice <= priceFilter2.priceRange2[1]) : false;
+
+  //     return inRange1 || inRange2;
+  //   });
+  // }
 
   // SEARCH INPUT FILTER
   if (searchQuery.value) {
@@ -86,7 +102,10 @@ const addItemToCart = (productId) => {
 };
 
 // WHEN NO PRODUCT EXIST
-const noResults = computed(() => searchQuery.value && filteredProducts.value.length === 0);
+const noResults = computed(() => {
+  const hasFilters = selectedFilters.value.length > 0;
+  return (searchQuery.value || hasFilters) && filteredProducts.value.length === 0;
+});
 //  WHEN PRODUCT IS 0 or LESS THAN 8
 const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProducts.value.length < 8)
 </script>
