@@ -4,7 +4,7 @@ import axios from "axios";
 import Search_Filter from './Search_Filter.vue';
 import SpeedDial from './SpeedDial.vue';
 import Footer from '../homepage/Footer.vue'
-import { useWishListStore } from '../../store_state/wishlistState';
+import { useWishListStore } from '../../store_state/wishListState';
 import { useToast } from 'vue-toastification';
 import { useCartStore } from '../../store_state/cartState';
 

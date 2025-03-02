@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import axios from "axios";
 import SpeedDial from '../store/SpeedDial.vue';
-import { useWishListStore } from '../../store_state/wishlistState';
+import { useWishListStore } from '../../store_state/wishListState';
 import { useToast } from 'vue-toastification';
 import { useCartStore } from '../../store_state/cartState';
 

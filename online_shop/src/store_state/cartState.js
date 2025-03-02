@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { useWishListStore } from './wishlistState';
+import { useWishListStore } from './wishListState';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
