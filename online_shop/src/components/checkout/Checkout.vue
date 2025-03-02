@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from '../navigation/navbar.vue';
+import Navbar from '../navigation/Navbar.vue';
 import { useCartStore } from '../../store_state/cartState';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
