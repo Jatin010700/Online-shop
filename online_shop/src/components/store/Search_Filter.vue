@@ -1,6 +1,6 @@
 <script setup>
   import { ref, computed, inject } from 'vue';
-  import Navbar from '../navigation/navbar.vue';
+  import Navbar from '../navigation/Navbar.vue';
   import { useToast } from "vue-toastification";
 
   const dialog = ref(false);
