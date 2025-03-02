@@ -14,7 +14,6 @@ app.use(cors({
     origin: process.env.LOCAL_URL || process.env.VERCEL_URL,
     credentials: true,
   }));
-
 app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {

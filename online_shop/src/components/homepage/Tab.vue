@@ -13,11 +13,15 @@ const toast = useToast();
 const storeCart = useCartStore();
 const storeWishlist = useWishListStore();
 
+// PRODUCT API
+const LOCAL_URL = import.meta.env.VITE_LOCAL_URL;
+const VERCEL_URL = import.meta.env.VITE_VERCEL_URL;
+
 onMounted(async () => {
     try {
         const res = await axios.get(
-            "https://online-shop-back-end.onrender.com/"
-            // "http://localhost:5000/products"
+            `${VERCEL_URL}/products`
+            // `${LOCAL_URL}/products`
         );
         allProducts.value = res.data.products;
         setTimeout(() => {

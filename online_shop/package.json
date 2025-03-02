@@ -25,5 +25,5 @@
     "vite": "^6.1.0",
     "vite-plugin-vuetify": "^2.1.0"
   },
-  "proxy": "https://online-shop-back-end.onrender.com/"
+  "proxy": "https://online-shop-back-end.onrender.com"
 }
