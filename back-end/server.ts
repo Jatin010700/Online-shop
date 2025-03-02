@@ -11,7 +11,7 @@ app.listen(port, () => console.log(`Server running on port ${port}`));
 prisma.$connect().then(() => console.log("Connected to DB")).catch(err => console.error("DB Connection Error:", err));
 
 app.use(cors({
-    origin: process.env.LOCAL_URL,
+    origin: process.env.LOCAL_URL || process.env.VERCEL_URL,
     credentials: true,
   }));
 
