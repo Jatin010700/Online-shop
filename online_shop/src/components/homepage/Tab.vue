@@ -15,7 +15,10 @@ const storeWishlist = useWishListStore();
 
 onMounted(async () => {
     try {
-        const res = await axios.get("http://localhost:5000/products");
+        const res = await axios.get(
+            "https://online-shop-back-end.onrender.com"
+            // "http://localhost:5000/products"
+        );
         allProducts.value = res.data.products;
         setTimeout(() => {
             loading.value = false;
