@@ -17,6 +17,7 @@ console.log(count.value) // 0
 count.value++
 console.log(count.value) // 1
 ```
+#
 ### Reactive()
 ```
 const author = reactive({
@@ -28,6 +29,7 @@ const author = reactive({
   ]
 })
 ```
+#
 ### Computed()
 The computed() function expects to be passed a getter function, and the returned value is a computed ref.
 
