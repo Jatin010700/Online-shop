@@ -22,9 +22,10 @@ app.get('/', (req: Request, res: Response) => {
 
 app.get("/products", async (req, res) => {
   try {
-    const products = await prisma.frontPageProducts.findMany();
-    const store = await prisma.storeContent.findMany();
-    
+    const [products, store] = await Promise.all([
+      prisma.frontPageProducts.findMany(),
+      prisma.storeContent.findMany(),
+    ]);
     res.status(200).json({products, store});
   } catch (err) {
     res.status(500).json({err: "SERVER/DB ERROR"});
