@@ -20,8 +20,8 @@ const VERCEL_URL = import.meta.env.VITE_VERCEL_URL;
 onMounted(async () => {
     try {
         const res = await axios.get(
-            `${VERCEL_URL}/products`
-            // `${LOCAL_URL}/products`
+            // `${VERCEL_URL}/products`
+            `${LOCAL_URL}/products`
         );
         allProducts.value = res.data.products;
         setTimeout(() => {
