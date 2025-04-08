@@ -21,7 +21,7 @@ const apiKey = import.meta.env.VITE_PUBLIC_KEY;
 onMounted(async () => {
     try {
         const res = await axios.get(
-            `${VERCEL_URL}`,
+            `${VERCEL_URL}products`,
             // `${LOCAL_URL}`,
             {
             headers: {
