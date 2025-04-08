@@ -77,7 +77,7 @@
     { text: 'ITEM 18', value: false },
   ]);
 
-  // ERROR NOT WOKRING DUR PRICE SLIDER
+  // ERROR: NOT WORKING FOR PRICE SLIDER
   // const priceRange = computed(() => {
   //   return [sliderPrice1.value[0], sliderPrice1.value[1]];
   // });
@@ -93,7 +93,7 @@
     const selectedFilters = [
       ...items.value.filter(item => item.value).map(item => item.title),
       ...amenities.value,
-      // ERROR NOT WOKRING DUR PRICE SLIDER
+      // ERROR: NOT WORKING FOR PRICE SLIDER
       // ...priceRange.value.length ? [priceRange.value] : [],
       // ...priceRange2.value.length ? [priceRange2.value] : []
       // { priceRange: [sliderPrice1.value[0], sliderPrice1.value[1]] },

@@ -14,15 +14,20 @@ const storeCart = useCartStore();
 const storeWishlist = useWishListStore();
 
 // PRODUCT API
-const LOCAL_URL = import.meta.env.VITE_LOCAL_URL;
+const LOCAL_URL = import.meta.env.VITE_LOCAL_PRODUCT_URL
 const VERCEL_URL = import.meta.env.VITE_VERCEL_URL;
+const apiKey = import.meta.env.VITE_PUBLIC_KEY;
 
 onMounted(async () => {
     try {
         const res = await axios.get(
-            `${VERCEL_URL}/products`
-            // `${LOCAL_URL}/products`
-        );
+            `${VERCEL_URL}`,
+            // `${LOCAL_URL}`,
+            {
+            headers: {
+                "x-api-key": apiKey,
+            },
+        });
         allProducts.value = res.data.products;
         setTimeout(() => {
             loading.value = false;
