@@ -20,22 +20,23 @@ defineProps({
       </p>
     </div>
     <div class="wrapImg1">
-      <img src="/headset.webp" alt="" width="500px" height="100%"/>
+      <img src="/headset.webp" alt="" width="100%" height="auto"/>
       <p class="discount">-50%</p>
       <p class="imgName">Headset scarlet version 2.58</p>
     </div>
   </div>
 
-  <div class="headerSub2"><div class="headerText2">
-    <h1>{{ msg }}</h1>
-    <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Quos sunt ratione dolor exercitationem minima quas itaque saepe 
-      quasi architecto vel! Accusantium, 
-      vero sint recusandae cum tempora nemo commodi soluta deleniti.
-    </p>
-  </div>
-    <img src="/laptop.webp" alt="" width="500px" height="670px"/>
+  <div class="headerSub2">
+    <div class="headerText2">
+      <h1>{{ msg }}</h1>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+        Quos sunt ratione dolor exercitationem minima quas itaque saepe 
+        quasi architecto vel! Accusantium, 
+        vero sint recusandae cum tempora nemo commodi soluta deleniti.
+      </p>
+    </div>
+    <img src="/laptop.webp" alt="" width="100%" height="auto"/>
     <p class="imgName">Laptop Asus version 1.538</p>
   </div>
 </div>
@@ -50,10 +51,12 @@ h1 {
   display: flex;
   justify-content: space-between;
   position: relative;
+  margin-left: 100px;
 
   .headerSub1 {
     position: relative;
-    margin-left: 100px;
+    width: 50%;
+    // margin-left: 100px;
 
     .headerText1 {
       margin-top: 30px;
@@ -66,8 +69,10 @@ h1 {
     .wrapImg1 {
       position: absolute;
       left: 0;
-      bottom: -340px;
+      // bottom: -340px;
       z-index: 1;
+      margin-top: 20px;
+      width: 80%;
 
       img {
         height: auto;
@@ -81,6 +86,7 @@ h1 {
         color: black;
         font-size: 20px;
         padding: 5px 10px;
+        line-height: normal!important;
       }
 
       .imgName {
@@ -94,11 +100,12 @@ h1 {
 
   .headerSub2 {
     position: relative;
+    width: 50%;
 
     .headerText2 {
       position: absolute;
-      left: -100px;
-      top:200px;
+      left: -9%;
+      top: 35%;
 
       p {
         width: 50%;

@@ -22,7 +22,7 @@ h1, p {
 }
 
 p {
-  line-height: 1;
+  line-height: normal;
 }
 
 body {

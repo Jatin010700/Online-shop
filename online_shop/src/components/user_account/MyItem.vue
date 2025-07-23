@@ -145,7 +145,7 @@
     padding: 0;
     margin-right: 0;
     margin-left: 68px;
-    max-width: 1315px;
+    max-width: 96%;
 
     .v-card {
         border-radius: 0;
