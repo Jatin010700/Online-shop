@@ -255,7 +255,7 @@
     </v-dialog>
   </div>
 
-    <Navbar propNavbarContainer="classPropNavContainer"/>
+    <Navbar propNavbarContainer="classPropNavContainer" propNavBarSub="classPropNavBarSub"/>
     </div>
   </v-container>
 </template>
@@ -263,8 +263,7 @@
 <style lang="scss" scoped>
 .searchContainer {
     padding: 16px 0;
-    margin-right: 0;
-    max-width: 1285px;
+    max-width: none;
 
     .wrapSearch {
         display: flex;
@@ -295,11 +294,15 @@
     height: 0;
 }
 
-  .v-card, .v-btn {
-    border-radius: 0!important;
-    font-size: 20px;
-    color: #191919;
-    height: 52px;
+::v-deep(.classPropNavBarSub) {
+  width: 100% !important;
+}
+
+.v-card, .v-btn {
+  border-radius: 0!important;
+  font-size: 20px;
+  color: #191919;
+  height: 52px;
 }
 
 .sliderTitle {
@@ -324,7 +327,7 @@
 }
 
 :deep(.v-overlay__content) {
-    height: 50%!important;
+    height: auto!important;
 }
 
 :deep(.v-slider-thumb__label) {
@@ -334,23 +337,25 @@
 :deep(.v-field),
 :deep(.v-slider-track),
 :deep(.v-chip) {
-    border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
 .v-chip-group {
-    padding: 20px 18px;
+  padding: 20px 18px;
 }
 
 .v-input--horizontal {
-    margin-inline: 0;
+  margin-inline: 0;
 }
 
 :deep(.v-slide-group__content) {
   max-width: none;
+  justify-content: center;
 }
 
 .v-text-field {
-    width: 81px!important;
+  width: 70%!important;
+  margin-left: 84px;
 }
 
 :deep(.v-selection-control__input > .v-icon) {
@@ -361,6 +366,7 @@
   border-radius: 0;
   transform: rotate(45deg);
 }
+
 .wrapCheckbox-Slider {
   display: flex;
   align-items: center;

@@ -1,5 +1,4 @@
 <script setup>
-import Navbar from '../navigation/Navbar.vue';
 import { useCartStore } from '../../store_state/cartState';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
@@ -17,8 +16,8 @@ const totalPrice = computed(() => {
   if (!cartList.value || !Array.isArray(cartList.value)) return "0.00";
 
   return cartList.value.reduce((total, item) => {
-    const discountedPrice = item.discount 
-        ? item.price * (1 - item.discount / 100) 
+    const discountedPrice = item.discount
+        ? item.price * (1 - item.discount / 100)
         : item.price;
         return total + discountedPrice * item.quantity;
       }, 0).toFixed(2);
@@ -59,17 +58,13 @@ const prev = () => {
 </script>
 
 <template>
-  <div class="wrapNav">
-    <transition name="slide-left" mode="out-in">
-      <h1 :key="currentStepTitle">{{ currentStepTitle }}</h1>
-    </transition>
-    <Navbar propNavbarContainer="classPropNavContainer" />
-  </div>
-
   <v-container class="checkContainer">
     <v-stepper v-model="steps" 
     show-actions
     alt-labels>
+     <transition name="slide-left" mode="out-in">
+      <h1 :key="currentStepTitle">{{ currentStepTitle }}</h1>
+    </transition>
       <v-stepper-header>
         <template v-for="n in stepsNumber" :key="`${n}-step`">
           <v-stepper-item
@@ -203,30 +198,24 @@ const prev = () => {
 </template>
 
 <style lang="scss" scoped>
-.wrapNav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.checkContainer {
+    width: 100%;
+    padding: 0;
+    height: 100vh;
+    background-color: white;
 
     h1 {
-        margin-left: 87px;
-        font-size: 50px;
-        text-transform: uppercase;
+      color: #191919;
+      font-size: 50px;
+      text-transform: uppercase;
+      width: 100%;
+      margin-left: 25px;
     }
-
-    .classPropNavContainer {
-        margin: 0;
-    }
-}
-
-.checkContainer {
-    padding: 0 20px;
-    margin-left: 68px;
-    max-width: 1312px;
 
     .v-stepper.v-sheet {
         box-shadow: none;
         border-radius: 0;
+        margin-left: 70px;
     }
 
     :deep(.v-stepper-header) {
@@ -337,5 +326,11 @@ const prev = () => {
 
 .v-stepper-item {
   flex-basis: 200px!important;
+}
+
+@media (min-width: 1280px) {
+    .v-container {
+        max-width: none;
+    }
 }
 </style>

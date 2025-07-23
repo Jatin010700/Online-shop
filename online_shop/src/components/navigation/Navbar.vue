@@ -5,7 +5,10 @@ import Login from '../user_account/Login.vue';
 
 const route = useRoute();
 
-defineProps({ propNavbarContainer: String });
+defineProps({
+  propNavbarContainer: String,
+  propNavBarSub: String
+});
 
 const items = ref([
   {
@@ -30,7 +33,7 @@ const isActive = (to) => route.path === to;
 
 <template>
   <v-app :class="['navbarContainer', propNavbarContainer]">
-    <v-container class="navBarSub">
+    <v-container :class="['navBarSub', propNavBarSub]">
       <v-breadcrumbs :items="items">
         <template v-slot:item="{ item }">
           <v-breadcrumbs-item
@@ -52,13 +55,9 @@ const isActive = (to) => route.path === to;
 
 <style lang="scss" scoped>
 .navbarContainer {
-  margin: 16px 0 0 auto;
-  display: flex;
-  justify-content: flex-end;
   position: sticky;
   top: 0;
-  width: 55%;
-  max-width: 800px;
+  width: 100%;
   background-color: transparent;
   z-index: 1;
   height: 90px;
@@ -77,13 +76,13 @@ const isActive = (to) => route.path === to;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin-right: 8px;
-    padding: 0;
+    width: 54%;
+    margin-right: 0;
+    padding: 0 30px 0 0;
     min-height: 0;
 
     .btn {
-        font-size: 24px;
+      font-size: 24px;
     }
   }
 

@@ -28,8 +28,8 @@ const apiKey = import.meta.env.VITE_PUBLIC_KEY;
 onMounted(async () => {
   try {
     const res = await axios.get(
-          `${VERCEL_URL}products`,
-          // `${LOCAL_URL}`,
+          // `${VERCEL_URL}products`,
+          `${LOCAL_URL}`,
           {
           headers: {
               "x-api-key": apiKey,
@@ -58,7 +58,7 @@ const filteredProducts = computed(() => {
 
   // CHECK IF SelectedFilters have DISCOUNT, LIMITED, NEW ITEMS
   
-  // ERROR NOT WOKRING DUR PRICE SLIDER
+  // ERROR NOT WORKING DUR PRICE SLIDER
   // const priceFilter = selectedFilters.value.find(filter => filter?.priceRange);
   // const priceFilter2 = selectedFilters.value.find(filter => filter?.priceRange2);
   
@@ -170,9 +170,9 @@ const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProd
 
 <style lang="scss" scoped>
 .masonry-wall{
-  width: 91.3%;
+  width: 92%;
   margin-top: 7px;
-  margin-left: 95px;
+  margin-left: 90px;
 }
 
 .v-card-title {
@@ -204,7 +204,7 @@ const nobtn = computed(() => filteredProducts.value.length === 0 || filteredProd
   }
 
   .item-stock {
-    top: 40px;
+    top: 45px;
   }
 
   .description {

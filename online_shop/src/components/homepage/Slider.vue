@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-import Tab from './Tab.vue'
 
 const images = ref([
   {
@@ -29,26 +28,36 @@ const images = ref([
 
 <template>
   <v-app class="sliderApp">
-    <Tab/>
     <v-container class="sliderContainer">
-      <v-lazy
-      :min-height="200"
-      :options="{'threshold':0.5}"
-      transition="fade-transition">
-        <v-carousel
-          height="400"
-          cycle
-          show-arrows="hover"
-          hide-delimiter-background
-          delimiter-icon="mdi-square"
-          prev-icon="mdi-chevron-left"
-          next-icon="mdi-chevron-right">
-            <v-carousel-item v-for="(image, i) in images" :key="i" class="wrapText">
-              <p :class="'imageText-' + i">{{ image.title }}</p>
-              <v-img :src="image.imageURL" height="100%" cover class="carousel-image"></v-img>
-            </v-carousel-item>
-        </v-carousel>
-      </v-lazy>
+      <div class="sliderLeft">
+        <h1>FEATURED ITEMS</h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+          Quos sunt ratione dolor exercitationem minima quas itaque saepe 
+          quasi architecto vel! Accusantium, 
+          vero sint recusandae cum tempora nemo commodi soluta deleniti.
+        </p>
+      </div>
+  <div class="sliderRight">
+    <v-lazy
+    :min-height="200"
+    :options="{'threshold':0.5}"
+    transition="fade-transition">
+      <v-carousel
+        height="400"
+        cycle
+        show-arrows="hover"
+        hide-delimiter-background
+        delimiter-icon="mdi-square"
+        prev-icon="mdi-chevron-left"
+        next-icon="mdi-chevron-right">
+          <v-carousel-item v-for="(image, i) in images" :key="i" class="wrapText">
+            <p :class="'imageText-' + i">{{ image.title }}</p>
+            <v-img :src="image.imageURL" height="100%" cover class="carousel-image"></v-img>
+          </v-carousel-item>
+      </v-carousel>
+    </v-lazy>
+  </div>
     </v-container>
   </v-app>
 </template>
@@ -57,11 +66,29 @@ const images = ref([
 .sliderApp {
     background-color: #191919;
     color: white;
-    margin-right: 10px;
+    padding-right: 30px;
+    margin-left: 100px;
 
     .sliderContainer {
-      max-width: 760px;
-      margin-right: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+
+      .sliderLeft {
+        width: 80%;
+
+        h1 {
+          font-size: 50px;
+        }
+
+        p {
+          width: 60%;
+        }
+      }
+
+      .sliderRight {
+        width: 100%;
+      }
 
       .wrapText {
         position: relative;
@@ -121,5 +148,11 @@ const images = ref([
 
 :deep(.v-btn--icon) {
   border-radius: 0!important;
+}
+
+@media (min-width: 1280px) {
+    .v-container {
+        max-width: none;
+    }
 }
 </style>

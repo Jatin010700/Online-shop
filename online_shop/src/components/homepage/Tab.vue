@@ -21,8 +21,8 @@ const apiKey = import.meta.env.VITE_PUBLIC_KEY;
 onMounted(async () => {
     try {
         const res = await axios.get(
-            `${VERCEL_URL}products`,
-            // `${LOCAL_URL}`,
+            // `${VERCEL_URL}products`,
+            `${LOCAL_URL}`,
             {
             headers: {
                 "x-api-key": apiKey,
@@ -53,9 +53,10 @@ const addItemToCart = (productId) => {
     <v-app class="TabApp">
         <v-container class="tabContainer">
             <v-lazy
-            :min-height="400"
+            :min-width="1260"
             :options="{'threshold':1}"
-            transition="fade-transition">
+            transition="fade-transition"
+            class="tabLazy">
                 <v-card>
                 <v-tabs
                     v-model="tab"
@@ -82,7 +83,7 @@ const addItemToCart = (productId) => {
                             <SpeedDial
                                 v-if="!loading"
                                 :clickWishList="() => addItemToWishList(product.id)"
-                                :clickCart="() => addItemToCart(product.id)" 
+                                :clickCart="() => addItemToCart(product.id)"
                             />
                     </v-card>
                     </v-tabs-window-item>
@@ -102,13 +103,13 @@ const addItemToCart = (productId) => {
                                 ${{ product.discount ? (product.price * (1 - product.discount / 100)).toFixed(2) : product.price || "No Discount" }}
                             </v-card-subtitle>
                         </div>
-                        <SpeedDial 
+                        <SpeedDial
                             :clickWishList="() => addItemToWishList(product.id)"
-                            :clickCart="() => addItemToCart(product.id)" 
+                            :clickCart="() => addItemToCart(product.id)"
                         />
                     </v-card>
                     </v-tabs-window-item>
-            
+
                     <v-tabs-window-item value="three"  class="wrapContent">
                         <v-card
                             v-for="(product, i) in allProducts.slice(8, 12)" :key="i"
@@ -120,9 +121,9 @@ const addItemToCart = (productId) => {
                         <p class="item-stock">IN STOCK: {{ product.remaining_in_stock }}</p>
                         <v-card-title class="title">{{ product.title }}</v-card-title>
                         <v-card-subtitle class="price">${{ product.price || "No Price" }}</v-card-subtitle>
-                        <SpeedDial 
+                        <SpeedDial
                             :clickWishList="() => addItemToWishList(product.id)"
-                            :clickCart="() => addItemToCart(product.id)" 
+                            :clickCart="() => addItemToCart(product.id)"
                         />
                     </v-card>
                     </v-tabs-window-item>
@@ -136,13 +137,16 @@ const addItemToCart = (productId) => {
 
 <style lang="scss" scoped>
 .TabApp {
-    position: absolute;
-    bottom: -275px;
     width: 100%!important;
+    background-color: #191919;
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
 
     .tabContainer {
-        max-width: 1350px;
-        margin-left: 20px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
 
         .tabHeader {
             font-size: 30px;
@@ -163,9 +167,8 @@ const addItemToCart = (productId) => {
         .wrapContent {
             display: flex;
             gap: 20px;
-            width: 95%;
-            margin-left: 65px;
-    
+            width: 100%;
+
             .tabCard {
                 background: white;
                 height: 325px;
@@ -218,9 +221,9 @@ const addItemToCart = (productId) => {
                     padding: 5px 10px;
                     z-index: 1;
                 }
-                
+
                 .item-stock {
-                    top: 38px;
+                        top: 45px;
                 }
 
             }
@@ -251,8 +254,8 @@ const addItemToCart = (productId) => {
         box-shadow: none;
     }
 
-    :deep(.v-window__container) {
-        margin-top: 95px;
+    :deep(.v-application__wrap) {
+        min-height: 0;
     }
 
     :deep(.v-slide-group__content) {
@@ -262,9 +265,17 @@ const addItemToCart = (productId) => {
     :deep(.v-skeleton-loader__image) {
         height: 167px;
     }
-    
+
     .v-card-subtitle {
         padding: 0!important;
+    }
+
+    @media (min-width: 1280px) {
+        .v-container {
+            max-width: none;
+            margin-left: 36px;
+            padding: 0;
+        }
     }
 }
 </style>

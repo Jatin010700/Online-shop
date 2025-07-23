@@ -41,6 +41,7 @@
 
             <template v-slot:default="{ isActive }">
               <v-card>
+                <h1>NO LOGIN FEATURE</h1>
                 <form @submit.prevent="submit" class="formLogin">
                     <v-text-field
                         v-model="username.value.value"
@@ -124,6 +125,11 @@
 .v-card {
     border-radius: 0!important;
     width: 500px;
+
+    h1 {
+      text-align: center;
+      padding-top: 20px;
+    }
 }
 
 .text-h2 {

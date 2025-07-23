@@ -128,7 +128,7 @@ const isActive = (to) => route.path === to;
             justify-content: space-between;
             border-radius: 0;
         }
-        
+
         .link {
             width: 225px;
             display: flex;
@@ -156,11 +156,10 @@ const isActive = (to) => route.path === to;
         padding: 0;
         height: 100%;
     }
-    
+
     :deep(.v-navigation-drawer--left) {
         border-right-width: 0!important;
     }
-    
 }
 
 .custom-menu {
